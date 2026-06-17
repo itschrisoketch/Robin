@@ -1,26 +1,118 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ── Robin · Black & Bitcoin ───────────────────────────────────────────
+   Pure-black canvas, Bitcoin-orange accent. Amber is reserved exclusively
+   for the honest-redirection signpost so the color itself signals a redirect. */
+
+@theme {
+  --color-paper: oklch(0 0 0); /* pure black */
+  --color-paper-raised: oklch(0.175 0.004 60); /* near-black raised surface */
+  --color-paper-sunk: oklch(0.125 0.003 60);
+  --color-ink: oklch(0.97 0.008 80); /* near-white text */
+  --color-ink-soft: oklch(0.78 0.01 80);
+  --color-ink-faint: oklch(0.6 0.012 75);
+  --color-hairline: oklch(0.3 0.006 70);
+  --color-hairline-soft: oklch(0.22 0.005 70);
+
+  /* Bitcoin orange — the signature accent (#f7931a) */
+  --color-robin: oklch(0.72 0.168 56);
+  --color-robin-deep: oklch(0.6 0.16 52);
+  --color-robin-tint: oklch(0.28 0.075 55); /* dark orange-tinted surface */
+
+  /* Amber — reserved for the redirection signpost only */
+  --color-honey: oklch(0.83 0.13 88);
+  --color-honey-surface: oklch(0.255 0.055 82);
+  --color-honey-edge: oklch(0.5 0.1 84);
+  --color-honey-deep: oklch(0.85 0.12 86);
+
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-hanken);
+  --font-mono: var(--font-mono);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--color-paper);
+  color: var(--color-ink);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  /* faint orange-tinted grain so the black surface has tooth, not flat color */
+  background-image: radial-gradient(
+    oklch(0.72 0.168 56 / 0.04) 0.5px,
+    transparent 0.5px
+  );
+  background-size: 4px 4px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Robin speaks in Fraunces, optically large + a touch soft */
+.voice {
+  font-family: var(--font-display), Georgia, serif;
+  font-optical-sizing: auto;
+  font-variation-settings: "opsz" 40, "SOFT" 30, "WONK" 0;
+  letter-spacing: -0.012em;
+}
+
+.font-display {
+  font-family: var(--font-display), Georgia, serif;
+  font-optical-sizing: auto;
+}
+
+.font-mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+::selection {
+  background: var(--color-robin);
+  color: var(--color-paper);
+}
+
+/* ── Motion ──────────────────────────────────────────────── */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes rise-soft {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-rise {
+  animation: rise 0.7s var(--ease-out-expo) both;
+}
+
+.animate-rise-soft {
+  animation: rise-soft 0.55s var(--ease-out-expo) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-rise,
+  .animate-rise-soft {
+    animation: none;
+  }
+}
+
+/* thin scrollbar that respects the black canvas */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-hairline) transparent;
 }

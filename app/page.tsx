@@ -1,63 +1,142 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import {
+  PERSONAS,
+  type Persona,
+  type Profile,
+  type RobinResponse,
+} from "@/app/lib/personas";
+import { PersonaPresets, ProfileForm } from "@/app/components/Intake";
+import {
+  Results,
+  ResultsEmpty,
+  ResultsSkeleton,
+  DogfoodCallout,
+} from "@/app/components/Results";
+import { RobinMark } from "@/app/components/icons";
+
+const EMPTY_PROFILE: Profile = {
+  languages: [],
+  yearsExperience: 3,
+  interests: [],
+  hoursPerWeek: 5,
+  goals: "",
+  targetRepo: "bitcoin/bitcoin",
+};
 
 export default function Home() {
+  const [profile, setProfile] = useState<Profile>(EMPTY_PROFILE);
+  const [active, setActive] = useState<Persona["id"] | null>(null);
+  const [result, setResult] = useState<RobinResponse | null>(null);
+  const [busy, setBusy] = useState(false);
+  const reqRef = useRef(0);
+
+  async function recommend(p: Profile) {
+    const reqId = ++reqRef.current;
+    setBusy(true);
+    setResult(null);
+    try {
+      const res = await fetch("/api/recommend", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(p),
+      });
+      const data: RobinResponse = await res.json();
+      // Ignore stale responses if a newer query started.
+      if (reqId === reqRef.current) setResult(data);
+    } catch {
+      if (reqId === reqRef.current) setResult(null);
+    } finally {
+      if (reqId === reqRef.current) setBusy(false);
+    }
+  }
+
+  function pickPreset(p: Persona) {
+    if (busy) return;
+    setActive(p.id);
+    setProfile(p.profile);
+    recommend(p.profile);
+  }
+
+  function submitForm() {
+    setActive(null);
+    recommend(profile);
+  }
+
+  function patchProfile(patch: Partial<Profile>) {
+    setActive(null);
+    setProfile((prev) => ({ ...prev, ...patch }));
+  }
+
+  // Deep-link a preset for screenshots / a bulletproof demo backup:
+  // /?persona=bootcamp | senior | designer auto-runs that preset on load.
+  useEffect(() => {
+    const want = new URLSearchParams(window.location.search).get("persona");
+    const p = PERSONAS.find((x) => x.id === want);
+    if (p) pickPreset(p);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="mx-auto grid min-h-dvh max-w-[1240px] grid-cols-1 lg:grid-cols-[360px_1fr]">
+      {/* ── Intake column ───────────────────────────────── */}
+      <aside className="flex flex-col border-hairline px-6 pt-8 pb-6 lg:sticky lg:top-0 lg:h-dvh lg:overflow-y-auto lg:border-r">
+        <header className="animate-rise">
+          <div className="flex items-center gap-3">
+            <RobinMark size={40} />
+            <span className="font-display text-[2.1rem] leading-none tracking-tight text-ink">
+              Robin
+            </span>
+          </div>
+          <p className="voice mt-3 text-[1.05rem] leading-snug text-ink-soft">
+            A path into Bitcoin open source.
           </p>
+          <p className="mt-2 max-w-[34ch] text-[0.82rem] leading-relaxed text-ink-faint">
+            What to work on, what to read first, and — when it matters most —
+            when not to contribute yet.
+          </p>
+        </header>
+
+        <div className="mt-7">
+          <PersonaPresets active={active} busy={busy} onPick={pickPreset} />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <ProfileForm
+          profile={profile}
+          onChange={patchProfile}
+          onSubmit={submitForm}
+          busy={busy}
+        />
+
+        <footer className="mt-auto pt-6">
+          <div className="font-mono text-[0.58rem] uppercase tracking-[0.18em] text-ink-faint">
+            What Robin reads
+          </div>
+          <p className="mt-1.5 max-w-[32ch] font-mono text-[0.68rem] leading-relaxed text-ink-faint">
+            open issues · last ~100 merged PRs · CONTRIBUTING &amp;
+            developer-notes
+          </p>
+          <div className="mt-3 font-mono text-[0.6rem] text-ink-faint/70">
+            RAG, not fine-tuning.
+          </div>
+        </footer>
+      </aside>
+
+      {/* ── Results column ──────────────────────────────── */}
+      <main className="flex min-h-dvh flex-col px-6 py-8 sm:px-10">
+        <div className="mx-auto w-full max-w-[680px] flex-1">
+          {busy ? (
+            <ResultsSkeleton />
+          ) : result ? (
+            <Results response={result} />
+          ) : (
+            <ResultsEmpty />
+          )}
+        </div>
+
+        <div className="mx-auto mt-8 w-full max-w-[680px]">
+          <DogfoodCallout />
         </div>
       </main>
     </div>
