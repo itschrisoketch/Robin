@@ -52,7 +52,7 @@
     panel.className = "robin-panel robin-scope";
     panel.innerHTML = `
       <div class="robin-panel-head">
-        <div class="robin-wordmark"><span class="robin-dot"></span><span class="robin-name">Robin</span></div>
+        <div class="robin-wordmark">${robinLogo(22)}<span class="robin-name">Robin</span></div>
         <button class="robin-x" title="Close">&times;</button>
       </div>
       <p class="robin-panel-repo">Should you contribute to <span class="robin-mono">${robinEsc(
@@ -95,7 +95,7 @@
     const fab = document.createElement("button");
     fab.id = "robin-fab";
     fab.className = "robin-fab robin-scope";
-    fab.innerHTML = `<span class="robin-dot"></span> Ask Robin`;
+    fab.innerHTML = `${robinLogo(18)} Ask Robin`;
     fab.title = `Should you contribute to ${repo}?`;
     fab.addEventListener("click", () => openPanel(repo));
     document.body.appendChild(fab);

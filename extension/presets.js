@@ -48,6 +48,20 @@ const ROBIN_PRESETS = [
   },
 ];
 
+// The Robin mark (bird logo) as inline SVG — mirrors app/components/icons.tsx.
+// Path fills come from CSS (.rl-*) so it themes per context (wordmark vs FAB).
+function robinLogo(size) {
+  return (
+    `<svg class="robin-logo" width="${size}" height="${size}" viewBox="0 0 40 40" fill="none" aria-hidden="true">` +
+    `<path class="rl-body" d="M7 14 L2 9 L10 16 Z"/>` +
+    `<path class="rl-body" d="M27 11c-7-2-15 2-17 9-1 4 1 8 6 9 6 1 13-1 16-6 3-5 2-10-5-12Z"/>` +
+    `<path class="rl-breast" d="M16 19c-2 3-2 6 0 8 3 1.6 7 1.2 10-0.6-2.6-3-6.4-5.6-10-7.4Z"/>` +
+    `<path class="rl-beak" d="M27 11l7-1-6 4Z"/>` +
+    `<circle class="rl-eye" cx="26.5" cy="14.5" r="1.4"/>` +
+    `</svg>`
+  );
+}
+
 function robinGetBackend() {
   return new Promise((resolve) => {
     try {

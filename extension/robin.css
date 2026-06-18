@@ -48,6 +48,33 @@
   background: var(--orange);
 }
 
+/* Robin mark (bird logo). Two-tone on light surfaces. */
+.robin-logo {
+  display: block;
+  flex: none;
+}
+.robin-logo .rl-body {
+  fill: var(--ink);
+}
+.robin-logo .rl-breast {
+  fill: var(--orange);
+}
+.robin-logo .rl-beak {
+  fill: var(--orange-deep);
+}
+.robin-logo .rl-eye {
+  fill: var(--raised);
+}
+/* On the orange FAB, render the mark dark monochrome so it stays legible. */
+.robin-fab .rl-body,
+.robin-fab .rl-breast,
+.robin-fab .rl-beak {
+  fill: #1a1206;
+}
+.robin-fab .rl-eye {
+  fill: var(--orange);
+}
+
 /* ── Popup shell ─────────────────────────────────────────── */
 .robin-popup {
   width: 380px;
