@@ -1,6 +1,10 @@
 import { getRecommendation } from "@/app/lib/robin";
 import type { Profile } from "@/app/lib/personas";
 
+// Reasoning models (e.g. Opus 4.8) take ~25-35s. Vercel kills serverless
+// functions early by default — give this route room so it isn't truncated.
+export const maxDuration = 60;
+
 // Permissive CORS so the browser extension (and any deployed front-end) can call
 // this endpoint. Lock the origin down for production/enterprise.
 const CORS = {

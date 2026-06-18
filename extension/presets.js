@@ -1,7 +1,7 @@
 // Shared across popup + content script (classic scripts, shared global scope).
 // Mirrors app/lib/personas.ts presets so the extension can pre-fill profiles.
 
-const DEFAULT_BACKEND = "http://localhost:3000";
+const DEFAULT_BACKEND = "https://buildwithrobin.vercel.app";
 
 const ROBIN_PRESETS = [
   {
