@@ -89,6 +89,21 @@ export default function Home() {
     setProfile((prev) => ({ ...prev, ...patch }));
   }
 
+  // Start fresh: drop the result, reset the form, clear the persisted session.
+  // (GitHub stays connected — it's a separate session and still aids the model.)
+  function newSession() {
+    reqRef.current++; // invalidate any in-flight request
+    setBusy(false);
+    setResult(null);
+    setActive(null);
+    setProfile(EMPTY_PROFILE);
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      /* ignore */
+    }
+  }
+
   // When GitHub connects, reflect the detected languages in the form chips so
   // the inference is transparent and editable. Stable identity (no refetch loop).
   const applyGithubSkills = useCallback(
@@ -128,7 +143,18 @@ export default function Home() {
   const started = busy || result;
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-[720px] flex-col px-6 pb-16">
+    <main className="relative mx-auto flex min-h-dvh w-full max-w-[720px] flex-col px-6 pb-16">
+      {/* ── New session (shown once a session is active) ─────── */}
+      {started && (
+        <button
+          onClick={newSession}
+          className="absolute right-5 top-5 z-10 inline-flex items-center gap-1.5 rounded-full border border-hairline bg-paper-raised px-3.5 py-1.5 text-[0.8rem] font-medium text-ink-soft transition-colors hover:border-robin/50 hover:text-ink"
+        >
+          <span className="text-[1rem] leading-none text-robin">+</span> New
+          session
+        </button>
+      )}
+
       {/* ── Header / instruction ───────────────────────────── */}
       <header
         className={[
