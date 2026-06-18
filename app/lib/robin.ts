@@ -163,7 +163,13 @@ export async function getRecommendation(
     const content: string | undefined = data?.choices?.[0]?.message?.content;
     if (!content) throw new Error("empty completion");
 
-    const parsed = JSON.parse(content);
+    // Some models wrap JSON in ```json fences despite response_format — strip them.
+    const cleaned = content
+      .trim()
+      .replace(/^```(?:json)?\s*/i, "")
+      .replace(/\s*```$/, "");
+
+    const parsed = JSON.parse(cleaned);
     // Normalize ranks so the UI ordering is always 1,2,3.
     if (Array.isArray(parsed?.recs)) {
       parsed.recs = parsed.recs
@@ -172,6 +178,10 @@ export async function getRecommendation(
           ...rec,
           rank: i + 1,
         }));
+    }
+    // Some models emit fitScore on a 0–1 scale; normalize to 0–100.
+    if (typeof parsed?.fitScore === "number" && parsed.fitScore <= 1) {
+      parsed.fitScore = Math.round(parsed.fitScore * 100);
     }
     if (!isValidResponse(parsed)) throw new Error("schema mismatch");
 
