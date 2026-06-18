@@ -116,16 +116,19 @@ function renderGh(d) {
     return;
   }
   const allLangs = (d.summary?.topLanguages || []).map((l) => l.name);
-  const langs = allLangs.join(" · ");
-  ghEl.innerHTML = `<div class="robin-gh-bar">${robinGithubMark()}<span class="robin-gh-user">@${robinEsc(
-    d.summary?.login,
-  )}</span>${
-    langs
-      ? ` <span class="robin-gh-langs" title="Robin sees ${robinEsc(
-          langs,
-        )}">Robin sees <b>${robinEsc(langs)}</b></span>`
-      : ""
-  } <button id="robin-gh-dc" class="robin-gh-dc">disconnect</button></div>`;
+  const pills = allLangs
+    .map((l) => `<span class="robin-gh-pill">${robinEsc(l)}</span>`)
+    .join("");
+  ghEl.innerHTML = `<div class="robin-gh-card">
+    <div class="robin-gh-head">${robinGithubMark()}<span class="robin-gh-user">@${robinEsc(
+      d.summary?.login,
+    )}</span><button id="robin-gh-dc" class="robin-gh-dc">disconnect</button></div>
+    ${
+      pills
+        ? `<div class="robin-gh-seen">Robin sees your skills</div><div class="robin-gh-pills">${pills}</div>`
+        : ""
+    }
+  </div>`;
   document.getElementById("robin-gh-dc").addEventListener("click", async () => {
     const backend = await robinGetBackend();
     try {

@@ -173,38 +173,47 @@
   font-weight: 400;
   color: var(--faint);
 }
-.robin-gh-bar {
+.robin-gh-card {
   display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
+  flex-direction: column;
   gap: 8px;
   border: 1px solid var(--hair);
-  border-radius: 999px;
-  padding: 7px 14px;
+  border-radius: 14px;
+  padding: 10px 12px;
   font-size: 12px;
-  overflow: hidden;
+}
+.robin-gh-head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
 }
 .robin-gh-user {
-  flex: none;
   font-weight: 600;
   color: var(--ink);
 }
-/* Languages can be many — keep the bar one line and truncate with an ellipsis
-   (full list in the title tooltip), so the popup height never grows. */
-.robin-gh-langs {
-  flex: 1 1 auto;
-  min-width: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  color: var(--soft);
+.robin-gh-seen {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--faint);
 }
-.robin-gh-langs b {
-  color: var(--orange-deep);
-  font-family: ui-monospace, monospace;
-  font-weight: 500;
+/* All detected languages as pills — they wrap freely; this is the demo flex. */
+.robin-gh-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.robin-gh-pill {
+  background: var(--orange);
+  color: #fff;
+  border-radius: 999px;
+  padding: 2px 9px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.5;
 }
 .robin-gh-dc {
+  margin-left: auto;
   flex: none;
   background: none;
   border: none;
