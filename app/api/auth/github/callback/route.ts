@@ -52,10 +52,14 @@ export async function GET(request: Request) {
 
     const res = NextResponse.redirect(new URL("/?gh=connected", origin));
     res.cookies.delete(COOKIE_STATE);
+    // SameSite=None (https) so the cookie is also sent on the browser
+    // extension's cross-site credentialed fetches; falls back to Lax on http
+    // (local dev) where Secure cookies can't be set.
+    const secure = origin.startsWith("https");
     res.cookies.set(COOKIE_SUMMARY, encodeSummary(summary), {
       httpOnly: true,
-      sameSite: "lax",
-      secure: origin.startsWith("https"),
+      sameSite: secure ? "none" : "lax",
+      secure,
       path: "/",
       maxAge: 60 * 60 * 24, // 1 day — derived data only, re-connect to refresh
     });

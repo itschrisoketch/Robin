@@ -83,6 +83,65 @@ function showReset() {
   document.querySelector(".robin-foot").prepend(link);
 }
 
+// ── GitHub connect ─────────────────────────────────────────
+// OAuth happens in a normal tab (the backend sets the cookie); the popup's
+// fetches use credentials:"include" so the cookie rides along on prod (https).
+const ghEl = document.getElementById("robin-gh");
+
+async function refreshGh() {
+  try {
+    const backend = await robinGetBackend();
+    const r = await fetch(`${backend}/api/auth/github/me`, {
+      credentials: "include",
+    });
+    renderGh(await r.json());
+  } catch {
+    ghEl.innerHTML = "";
+  }
+}
+
+function renderGh(d) {
+  if (!d || !d.configured) {
+    ghEl.innerHTML = "";
+    return;
+  }
+  if (!d.connected) {
+    ghEl.innerHTML = `<button id="robin-gh-connect" class="robin-gh-btn">${robinGithubMark()} Connect GitHub <span class="robin-gh-sub">— Robin reads your real skills</span></button>`;
+    document
+      .getElementById("robin-gh-connect")
+      .addEventListener("click", async () => {
+        const backend = await robinGetBackend();
+        chrome.tabs.create({ url: `${backend}/api/auth/github/login` });
+      });
+    return;
+  }
+  const langs = (d.summary?.topLanguages || [])
+    .slice(0, 4)
+    .map((l) => l.name)
+    .join(" · ");
+  ghEl.innerHTML = `<div class="robin-gh-bar">${robinGithubMark()}<span class="robin-gh-user">@${robinEsc(
+    d.summary?.login,
+  )}</span>${
+    langs
+      ? ` <span class="robin-gh-langs">Robin sees <b>${robinEsc(langs)}</b></span>`
+      : ""
+  } <button id="robin-gh-dc" class="robin-gh-dc">disconnect</button></div>`;
+  document.getElementById("robin-gh-dc").addEventListener("click", async () => {
+    const backend = await robinGetBackend();
+    try {
+      await fetch(`${backend}/api/auth/github/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch {
+      /* ignore */
+    }
+    refreshGh();
+  });
+}
+
+refreshGh();
+
 document.getElementById("robin-go").addEventListener("click", run);
 document.getElementById("robin-options").addEventListener("click", (e) => {
   e.preventDefault();

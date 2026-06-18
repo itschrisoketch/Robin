@@ -130,7 +130,13 @@ async function robinFetch(profile) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(profile),
+    credentials: "include", // carry the GitHub cookie if connected
   });
   if (!res.ok) throw new Error(`Backend returned ${res.status}`);
   return res.json();
+}
+
+// GitHub mark for the connect control.
+function robinGithubMark(size = 15) {
+  return `<svg class="robin-ico" width="${size}" height="${size}" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.486 2 12.02c0 4.428 2.865 8.184 6.839 9.51.5.092.682-.218.682-.483 0-.237-.009-.866-.013-1.7-2.782.606-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.467-1.11-1.467-.908-.622.069-.61.069-.61 1.004.071 1.532 1.034 1.532 1.034.892 1.532 2.341 1.09 2.91.833.092-.648.35-1.09.636-1.341-2.22-.253-4.555-1.114-4.555-4.957 0-1.095.39-1.99 1.029-2.69-.103-.254-.446-1.274.098-2.655 0 0 .84-.27 2.75 1.027a9.546 9.546 0 0 1 2.504-.338c.85.004 1.705.115 2.504.338 1.909-1.297 2.748-1.027 2.748-1.027.546 1.381.203 2.401.1 2.655.64.7 1.028 1.595 1.028 2.69 0 3.853-2.339 4.701-4.566 4.949.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .267.18.579.688.481A10.02 10.02 0 0 0 22 12.02C22 6.486 17.523 2 12 2Z"/></svg>`;
 }

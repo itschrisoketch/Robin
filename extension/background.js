@@ -21,6 +21,7 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(msg.profile),
+          credentials: "include", // carry the GitHub cookie if connected
         });
         if (!res.ok) throw new Error(`Backend returned ${res.status}`);
         const data = await res.json();

@@ -146,6 +146,69 @@
   color: var(--soft);
   font-size: 11.5px;
 }
+/* ── GitHub connect ──────────────────────────────────────── */
+.robin-gh {
+  margin-top: 10px;
+}
+.robin-gh-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  cursor: pointer;
+  background: var(--raised);
+  border: 1px solid var(--hair);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink);
+  transition: border-color 0.15s, background 0.15s;
+}
+.robin-gh-btn:hover {
+  border-color: rgba(247, 147, 26, 0.5);
+  background: var(--orange-tint);
+}
+.robin-gh-sub {
+  font-weight: 400;
+  color: var(--faint);
+}
+.robin-gh-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  border: 1px solid var(--hair);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 12px;
+}
+.robin-gh-user {
+  font-weight: 600;
+  color: var(--ink);
+}
+.robin-gh-langs {
+  color: var(--soft);
+}
+.robin-gh-langs b {
+  color: var(--orange-deep);
+  font-family: ui-monospace, monospace;
+  font-weight: 500;
+}
+.robin-gh-dc {
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--faint);
+  font-family: ui-monospace, monospace;
+  font-size: 11px;
+}
+.robin-gh-dc:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
 .robin-input {
   width: 100%;
   background: var(--sunk);
