@@ -3,7 +3,7 @@
 // repo's open issues, last ~100 merged PRs, and contributor docs; here they
 // are the curated output of that pipeline, frozen for the stage.
 
-export type ReadItem = { label: string; note?: string };
+export type ReadItem = { label: string; note?: string; url?: string };
 
 export type Recommendation = {
   rank: number;
@@ -16,6 +16,9 @@ export type Recommendation = {
   // concrete, RAG-derived signals shown in the expandable EvidencePanel.
   // These are "impossible to fake" without doing the ingestion — the credibility flex.
   evidence: string[];
+  // A real, working link the contributor should open — a specific issue/PR when
+  // one is surfaced in live signals, otherwise the repo's good-first-issue filter.
+  url?: string;
 };
 
 export type RobinResponse = {
@@ -341,6 +344,16 @@ export function resolvePersona(profile: Profile): Persona {
   if (!hasCode) return PERSONA_BY_ID.designer;
   if (cppish && profile.yearsExperience >= 5) return PERSONA_BY_ID.senior;
   return PERSONA_BY_ID.bootcamp;
+}
+
+// The link a recommendation card opens. Prefer the model-supplied URL (a real
+// issue/PR from live signals); otherwise derive the repo's issue tracker.
+export function recUrl(rec: { url?: string; repo: string }): string {
+  if (rec.url && /^https?:\/\//.test(rec.url)) return rec.url;
+  const m = rec.repo.match(/([\w.-]+)\/([\w.-]+)/);
+  return m
+    ? `https://github.com/${m[1]}/${m[2]}/issues`
+    : "https://github.com/bitcoin/bitcoin";
 }
 
 // Option pools for the intake form.

@@ -65,11 +65,15 @@ async function fetchRepoSignals(repo: string): Promise<RepoSignals | null> {
     return null;
   }
 
-  const items = (merged as { items: { number: number; title: string }[] })
-    .items;
+  type GhItem = { number: number; title: string; html_url?: string };
+  const items = (merged as { items: GhItem[] }).items;
   const gfiItems = Array.isArray((gfi as { items?: unknown[] })?.items)
-    ? (gfi as { items: { number: number; title: string }[] }).items
+    ? (gfi as { items: GhItem[] }).items
     : [];
+
+  // Include html_url so the model can attach the *real* link (never invent one).
+  const fmt = (i: GhItem) =>
+    `#${i.number} ${i.title}${i.html_url ? ` — ${i.html_url}` : ""}`;
 
   const signals: RepoSignals = {
     repo,
@@ -77,8 +81,8 @@ async function fetchRepoSignals(repo: string): Promise<RepoSignals | null> {
       release && typeof (release as { tag_name?: string }).tag_name === "string"
         ? (release as { tag_name: string }).tag_name
         : undefined,
-    mergedPRs: items.map((i) => `#${i.number} ${i.title}`),
-    goodFirstIssues: gfiItems.map((i) => `#${i.number} ${i.title}`),
+    mergedPRs: items.map(fmt),
+    goodFirstIssues: gfiItems.map(fmt),
   };
 
   cache.set(repo, { at: Date.now(), signals });

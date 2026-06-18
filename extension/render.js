@@ -33,17 +33,27 @@ function robinError(el, msg) {
   </div>`;
 }
 
+function robinRecUrl(rec) {
+  if (rec.url && /^https?:\/\//.test(rec.url)) return rec.url;
+  const m = String(rec.repo || "").match(/([\w.-]+)\/([\w.-]+)/);
+  return m
+    ? `https://github.com/${m[1]}/${m[2]}/issues`
+    : "https://github.com/bitcoin/bitcoin";
+}
+
 function robinCardHTML(rec, isRedirect) {
   const evidence = (rec.evidence || [])
     .map((e) => `<li><span class="robin-bullet">&bull;</span>${robinEsc(e)}</li>`)
     .join("");
   const reads = (rec.readFirst || [])
-    .map(
-      (r) =>
-        `<li>&#9656; <span class="robin-mono">${robinEsc(r.label)}</span>${
-          r.note ? ` <span class="robin-note">&mdash; ${robinEsc(r.note)}</span>` : ""
-        }</li>`,
-    )
+    .map((r) => {
+      const label = r.url
+        ? `<a class="robin-link robin-mono" href="${robinEsc(r.url)}" target="_blank" rel="noopener noreferrer">${robinEsc(r.label)}</a>`
+        : `<span class="robin-mono">${robinEsc(r.label)}</span>`;
+      return `<li>&#9656; ${label}${
+        r.note ? ` <span class="robin-note">&mdash; ${robinEsc(r.note)}</span>` : ""
+      }</li>`;
+    })
     .join("");
   return `
     <article class="robin-card${isRedirect ? " robin-redirect" : ""}">
@@ -59,6 +69,9 @@ function robinCardHTML(rec, isRedirect) {
       ${evidence ? `<div class="robin-sec"><span class="robin-k">What Robin read</span><ul class="robin-list">${evidence}</ul></div>` : ""}
       ${reads ? `<div class="robin-sec"><span class="robin-k">Read first</span><ul class="robin-list">${reads}</ul></div>` : ""}
       <div class="robin-sec"><span class="robin-k">Honest fit</span><p>${robinEsc(rec.fit)}</p></div>
+      <a class="robin-cta${isRedirect ? " robin-cta-redirect" : ""}" href="${robinEsc(
+        robinRecUrl(rec),
+      )}" target="_blank" rel="noopener noreferrer">Start here — open on GitHub &#8599;</a>
     </article>`;
 }
 
@@ -70,7 +83,6 @@ function robinResults(el, d) {
   const banner =
     isRedirect && d.verdict
       ? `<div class="robin-banner">
-           <div class="robin-banner-kicker">A fork in the trail</div>
            <div class="robin-banner-head">${robinEsc(d.verdict.headline)}</div>
            <p>${robinEsc(d.verdict.sub)}</p>
          </div>`

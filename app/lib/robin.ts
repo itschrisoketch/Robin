@@ -43,6 +43,11 @@ Tone: a warm, honest trail guide, not a gatekeeper. Mentorly. Concrete.
 
 Use ONLY the landscape facts provided in the context. Do not invent issue numbers or fabricate maintainer handles; speak in terms of areas, labels, and the trajectory described.
 
+LINK RULES (for the "url" field on every recommendation and the optional "url" on readFirst items):
+- If the LIVE SIGNALS below list a specific open issue or PR whose URL fits this recommendation, use that EXACT url (copy the https://github.com/... link verbatim).
+- Otherwise use a constructible, real URL: the repo's good-first-issue filter — https://github.com/<owner>/<repo>/issues?q=is%3Aopen%20is%3Aissue%20label%3A%22good%20first%20issue%22 — or a known doc file (e.g. https://github.com/<owner>/<repo>/blob/master/CONTRIBUTING.md), or the repo's issue tracker https://github.com/<owner>/<repo>/issues.
+- NEVER fabricate an issue/PR number or a URL. If you are not certain a specific issue exists, link the repo's issue tracker or good-first-issue filter instead.
+
 ${REPO_CONTEXT}
 
 Return ONLY a JSON object (no markdown, no prose around it) matching exactly this shape:
@@ -58,9 +63,10 @@ Return ONLY a JSON object (no markdown, no prose around it) matching exactly thi
       "area": string,                   // the specific area/issue type
       "signal": string,                 // short tag, e.g. "Rust · good first issue · welcoming"
       "whyNow": string,                 // why the project needs this NOW, from its trajectory
-      "readFirst": [ { "label": string, "note": string } ],  // 1-2 docs to read first
+      "readFirst": [ { "label": string, "note": string, "url": string } ],  // 1-2 docs; url = link to that file/page if known
       "fit": string,                    // honest one-line fit assessment
-      "evidence": [string, ...]         // 2-4 concrete signals that justify this rec
+      "evidence": [string, ...],        // 2-4 concrete signals that justify this rec
+      "url": string                     // REQUIRED — a real, working link the contributor opens (see LINK RULES)
     }
   ],
   "closer": string,                     // one closing line in Robin's voice

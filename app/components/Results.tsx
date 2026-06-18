@@ -1,7 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import type { Recommendation, RobinResponse } from "@/app/lib/personas";
+import {
+  recUrl,
+  type Recommendation,
+  type RobinResponse,
+} from "@/app/lib/personas";
 import { RobinMark, Signpost, BookMark, Arrow } from "@/app/components/icons";
 
 /* ── The redirection signpost (signature moment) ──────────── */
@@ -17,10 +21,7 @@ function RedirectionBanner({
           <Signpost size={20} />
         </span>
         <div>
-          <div className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-honey-deep">
-            A fork in the trail
-          </div>
-          <h3 className="voice mt-1 text-2xl text-ink sm:text-[1.7rem]">
+          <h3 className="voice text-2xl text-ink sm:text-[1.7rem]">
             {verdict.headline}
           </h3>
           <p className="mt-1.5 max-w-[52ch] text-[0.92rem] leading-relaxed text-ink-soft">
@@ -77,7 +78,18 @@ function EvidencePanel({
                 <BookMark />
               </span>
               <span className="font-mono text-[0.78rem]">
-                {r.label}
+                {r.url ? (
+                  <a
+                    href={r.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`underline decoration-hairline underline-offset-2 hover:decoration-current ${accent}`}
+                  >
+                    {r.label}
+                  </a>
+                ) : (
+                  r.label
+                )}
                 {r.note && (
                   <span className="ml-1.5 font-sans text-[0.78rem] text-ink-faint">
                     — {r.note}
@@ -99,6 +111,20 @@ function EvidencePanel({
         </span>
         <p className="mt-1 text-ink-soft">{rec.fit}</p>
       </div>
+
+      <a
+        href={recUrl(rec)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-[0.82rem] font-medium transition-colors ${
+          isRedirect
+            ? "border-honey-edge text-honey-deep hover:bg-honey-surface"
+            : "border-hairline text-robin-deep hover:border-robin/50 hover:bg-robin-tint"
+        }`}
+      >
+        Start here — open on GitHub
+        <span className="text-[0.9em]">↗</span>
+      </a>
     </div>
   );
 }
