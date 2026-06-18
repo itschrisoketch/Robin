@@ -8,21 +8,23 @@ import {
   type RobinResponse,
   resolvePersona,
 } from "@/app/lib/personas";
+import { buildLiveContext } from "@/app/lib/github";
 
 const OPENROUTER_BASE_URL =
   process.env.OPENROUTER_BASE_URL ?? "https://openrouter.ai/api/v1";
 const OPENROUTER_MODEL =
   process.env.OPENROUTER_MODEL ?? "anthropic/claude-sonnet-4.6";
 
-// The context Robin reasons over. In v1 this is RAG-retrieved from each repo's
-// open issues, last ~100 merged PRs, and contributor docs. Here it's a curated
-// brief of the ecosystem's current trajectory, frozen for reliability.
+// The static brief Robin reasons over when live signals aren't available — a
+// curated baseline of the ecosystem's trajectory, kept current as of June 2026.
+// Live GitHub signals (recent merged PRs, open issues, latest release) are
+// fetched per request and take precedence over this where they conflict.
 const REPO_CONTEXT = `
-You guide prospective contributors to Bitcoin open source. What you know about the current landscape:
+You guide prospective contributors to Bitcoin open source. Baseline landscape (as of mid-2026 — defer to any LIVE SIGNALS provided below, which are fresher):
 
-BITCOIN CORE (bitcoin/bitcoin) — consensus-critical C++, maintained by a handful of reviewers whose time is the scarcest resource in the ecosystem. A "good first issue" here still assumes months of context. Current in-flight work: cluster mempool (largest mempool rework, gated on deep review not more code, carried by a small reviewer set), libbitcoinkernel extraction (carving the consensus engine into a standalone library, wants help untangling global state), fuzzing/differential testing (perennially under-resourced, merges fast because it can't break consensus). Documentation (doc/) and developer-notes fixes are the one safe way for a newcomer to touch Core today.
+BITCOIN CORE (bitcoin/bitcoin) — consensus-critical C++, maintained by a handful of reviewers whose time is the scarcest resource in the ecosystem. A "good first issue" here still assumes months of context. Current state: v31.0 is the latest release line (cluster mempool — the big multi-year mempool redesign into bounded clusters — has MERGED and shipped in v31, so it is no longer "in-flight"; the work now is hardening, follow-up edge cases, and the next round of mempool/relay improvements like package relay). v31 also added Tor/I2P-only ("private") transaction broadcasting. Still actively wanting help: libbitcoinkernel extraction (modularising the consensus engine into a standalone library — ongoing, wants help untangling global state), fuzzing/differential testing (perennially under-resourced, merges fast because it can't break consensus). Documentation (doc/) and developer-notes fixes remain the one safe way for a newcomer to touch Core today.
 
-BDK (bitcoindevkit/bdk) — wallet library in Rust, mid 1.0 module split, actively asking for help on tests/docs around the new chain crate. Maintainers review fast and mentor newcomers on purpose. The single best on-ramp for a Rust beginner.
+BDK (bitcoindevkit/bdk) — wallet library in Rust, post-1.0 module split, actively reviews and mentors newcomers on tests/docs around the chain crate. The single best on-ramp for a Rust beginner.
 
 mempool (mempool/mempool) — block explorer, TypeScript front + back, very high issue throughput, friendly bar for first PRs, used by millions. Fastest way to build confidence and a portfolio.
 
@@ -120,6 +122,18 @@ export async function getRecommendation(
   }
 
   try {
+    // Pull live signals for the target repo + the usual recommendation set, so
+    // advice reflects what's actually happening on GitHub right now — not the
+    // frozen brief. Best-effort: returns "" if GitHub is unavailable.
+    const live = await buildLiveContext([
+      profile.targetRepo,
+      "bitcoindevkit/bdk",
+      "mempool/mempool",
+    ]);
+    const systemContent = live
+      ? `${SYSTEM_PROMPT}\n\nLIVE SIGNALS (fetched from GitHub moments ago — these are the freshest facts; prefer them over the baseline brief where they differ, and ground "why now" / evidence in them):\n${live}`
+      : SYSTEM_PROMPT;
+
     const res = await fetch(`${OPENROUTER_BASE_URL}/chat/completions`, {
       method: "POST",
       headers: {
@@ -131,7 +145,7 @@ export async function getRecommendation(
       body: JSON.stringify({
         model: OPENROUTER_MODEL,
         messages: [
-          { role: "system", content: SYSTEM_PROMPT },
+          { role: "system", content: systemContent },
           { role: "user", content: buildUserMessage(profile) },
         ],
         response_format: { type: "json_object" },
