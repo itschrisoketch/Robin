@@ -150,49 +150,65 @@ function RecommendationCard({
           : "border-hairline hover:border-robin/40",
       ].join(" ")}
     >
-      <button
-        onClick={() => setOpen((o) => !o)}
-        aria-expanded={open}
-        className="flex w-full items-start gap-3 p-5 text-left"
-      >
-        <span
-          className={[
-            "font-display text-2xl leading-none tabular-nums",
-            isRedirect ? "text-honey-deep" : "text-robin-deep",
-          ].join(" ")}
+      <div className="flex w-full items-start gap-2 p-5">
+        <button
+          onClick={() => setOpen((o) => !o)}
+          aria-expanded={open}
+          className="flex min-w-0 flex-1 items-start gap-3 text-left"
         >
-          {String(rec.rank).padStart(2, "0")}
-        </span>
-        <div className="min-w-0 flex-1">
-          <div className="font-mono text-[0.72rem] text-ink-soft">
-            {rec.repo}
+          <span
+            className={[
+              "font-display text-2xl leading-none tabular-nums",
+              isRedirect ? "text-honey-deep" : "text-robin-deep",
+            ].join(" ")}
+          >
+            {String(rec.rank).padStart(2, "0")}
+          </span>
+          <div className="min-w-0 flex-1">
+            <div className="font-mono text-[0.72rem] text-ink-soft">
+              {rec.repo}
+            </div>
+            <h4 className="mt-0.5 text-[1.02rem] font-medium leading-snug text-ink">
+              {rec.area}
+            </h4>
+            {rec.signal && (
+              <span
+                className={[
+                  "mt-2.5 inline-block rounded-full border px-2.5 py-0.5 font-mono text-[0.62rem] uppercase tracking-wide",
+                  isRedirect
+                    ? "border-honey-edge bg-honey-surface text-honey-deep"
+                    : "border-hairline bg-paper-sunk text-ink-soft",
+                ].join(" ")}
+              >
+                {rec.signal}
+              </span>
+            )}
           </div>
-          <h4 className="mt-0.5 text-[1.02rem] font-medium leading-snug text-ink">
-            {rec.area}
-          </h4>
-          {rec.signal && (
-            <span
-              className={[
-                "mt-2.5 inline-block rounded-full border px-2.5 py-0.5 font-mono text-[0.62rem] uppercase tracking-wide",
-                isRedirect
-                  ? "border-honey-edge bg-honey-surface text-honey-deep"
-                  : "border-hairline bg-paper-sunk text-ink-soft",
-              ].join(" ")}
-            >
-              {rec.signal}
-            </span>
-          )}
-        </div>
-        <span
+          <span
+            className={[
+              "mt-1 shrink-0 transition-transform duration-300",
+              open ? "rotate-90" : "",
+              isRedirect ? "text-honey-deep" : "text-robin-deep",
+            ].join(" ")}
+          >
+            <Arrow size={15} />
+          </span>
+        </button>
+        <a
+          href={recUrl(rec)}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Open ${rec.repo} on GitHub`}
           className={[
-            "mt-1 shrink-0 transition-transform duration-300",
-            open ? "rotate-90" : "",
-            isRedirect ? "text-honey-deep" : "text-robin-deep",
+            "grid h-8 w-8 shrink-0 place-items-center rounded-lg border transition-colors",
+            isRedirect
+              ? "border-honey-edge text-honey-deep hover:bg-honey-surface"
+              : "border-hairline text-robin-deep hover:border-robin/50 hover:bg-robin-tint",
           ].join(" ")}
         >
-          <Arrow size={15} />
-        </span>
-      </button>
+          <span className="text-[0.95rem] leading-none">↗</span>
+        </a>
+      </div>
 
       {open && (
         <div className="px-5 pb-5">
