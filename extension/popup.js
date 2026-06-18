@@ -71,7 +71,8 @@ function showReset() {
   const link = document.createElement("a");
   link.id = "robin-reset";
   link.href = "#";
-  link.textContent = "New search";
+  link.className = "robin-foot-link";
+  link.innerHTML = `${robinIcon("add", 14)} New session`;
   link.addEventListener("click", (e) => {
     e.preventDefault();
     robinStoreRemove("robin:last");

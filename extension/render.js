@@ -71,7 +71,10 @@ function robinCardHTML(rec, isRedirect) {
       <div class="robin-sec"><span class="robin-k">Honest fit</span><p>${robinEsc(rec.fit)}</p></div>
       <a class="robin-cta${isRedirect ? " robin-cta-redirect" : ""}" href="${robinEsc(
         robinRecUrl(rec),
-      )}" target="_blank" rel="noopener noreferrer">Start here — open on GitHub &#8599;</a>
+      )}" target="_blank" rel="noopener noreferrer">Start here — open on GitHub ${robinIcon(
+        "openInNew",
+        14,
+      )}</a>
     </article>`;
 }
 

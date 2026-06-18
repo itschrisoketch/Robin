@@ -200,6 +200,16 @@ select.robin-input {
   color: var(--orange-deep);
   text-decoration: none;
 }
+.robin-foot-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.robin-ico {
+  fill: currentColor;
+  flex: none;
+  vertical-align: -0.18em;
+}
 
 /* ── Results (shared) ────────────────────────────────────── */
 .robin-meta {
@@ -501,6 +511,9 @@ select.robin-input {
   justify-content: space-between;
 }
 .robin-x {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: none;
   border: none;
   color: var(--soft);

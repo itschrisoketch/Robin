@@ -7,6 +7,7 @@ import {
   type RobinResponse,
 } from "@/app/lib/personas";
 import { RobinMark, Signpost, BookMark, Arrow } from "@/app/components/icons";
+import { MdOpenInNew } from "react-icons/md";
 
 /* ── The redirection signpost (signature moment) ──────────── */
 function RedirectionBanner({
@@ -123,7 +124,7 @@ function EvidencePanel({
         }`}
       >
         Start here — open on GitHub
-        <span className="text-[0.9em]">↗</span>
+        <MdOpenInNew size={15} />
       </a>
     </div>
   );
@@ -206,7 +207,7 @@ function RecommendationCard({
               : "border-hairline text-robin-deep hover:border-robin/50 hover:bg-robin-tint",
           ].join(" ")}
         >
-          <span className="text-[0.95rem] leading-none">↗</span>
+          <MdOpenInNew size={15} />
         </a>
       </div>
 

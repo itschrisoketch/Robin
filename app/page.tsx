@@ -12,6 +12,7 @@ import { PersonaChips, Composer } from "@/app/components/Intake";
 import { Results, ResultsSkeleton } from "@/app/components/Results";
 import { GithubConnect } from "@/app/components/GithubConnect";
 import { RobinMark } from "@/app/components/icons";
+import { MdAdd } from "react-icons/md";
 
 const EMPTY_PROFILE: Profile = {
   languages: [],
@@ -150,8 +151,7 @@ export default function Home() {
           onClick={newSession}
           className="absolute right-5 top-5 z-10 inline-flex items-center gap-1.5 rounded-full border border-hairline bg-paper-raised px-3.5 py-1.5 text-[0.8rem] font-medium text-ink-soft transition-colors hover:border-robin/50 hover:text-ink"
         >
-          <span className="text-[1rem] leading-none text-robin">+</span> New
-          session
+          <MdAdd className="text-robin" size={16} /> New session
         </button>
       )}
 
@@ -200,7 +200,7 @@ export default function Home() {
       </section>
 
       <footer className="mt-12 text-center font-mono text-[0.62rem] text-ink-faint">
-        RAG, not fine-tuning · open issues · last ~100 merged PRs · CONTRIBUTING
+        Reads live: open issues · last ~100 merged PRs · CONTRIBUTING
       </footer>
     </main>
   );

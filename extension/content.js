@@ -53,7 +53,7 @@
     panel.innerHTML = `
       <div class="robin-panel-head">
         <div class="robin-wordmark">${robinLogo(22)}<span class="robin-name">Robin</span></div>
-        <button class="robin-x" title="Close">&times;</button>
+        <button class="robin-x" title="Close" aria-label="Close">${robinIcon("close", 20)}</button>
       </div>
       <p class="robin-panel-repo">Should you contribute to <span class="robin-mono">${robinEsc(
         repo,
