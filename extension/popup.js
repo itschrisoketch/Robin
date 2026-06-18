@@ -115,15 +115,15 @@ function renderGh(d) {
       });
     return;
   }
-  const langs = (d.summary?.topLanguages || [])
-    .slice(0, 4)
-    .map((l) => l.name)
-    .join(" · ");
+  const allLangs = (d.summary?.topLanguages || []).map((l) => l.name);
+  const langs = allLangs.join(" · ");
   ghEl.innerHTML = `<div class="robin-gh-bar">${robinGithubMark()}<span class="robin-gh-user">@${robinEsc(
     d.summary?.login,
   )}</span>${
     langs
-      ? ` <span class="robin-gh-langs">Robin sees <b>${robinEsc(langs)}</b></span>`
+      ? ` <span class="robin-gh-langs" title="Robin sees ${robinEsc(
+          langs,
+        )}">Robin sees <b>${robinEsc(langs)}</b></span>`
       : ""
   } <button id="robin-gh-dc" class="robin-gh-dc">disconnect</button></div>`;
   document.getElementById("robin-gh-dc").addEventListener("click", async () => {
