@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   PERSONAS,
+  LANGUAGE_OPTIONS,
   type Persona,
   type Profile,
   type RobinResponse,
@@ -20,6 +21,19 @@ const EMPTY_PROFILE: Profile = {
   goals: "",
   targetRepo: "bitcoin/bitcoin",
 };
+
+// Persist the last query + result locally so an OAuth redirect (or any reload)
+// doesn't wipe the screen — the session is restored on load.
+const STORAGE_KEY = "robin:web:last";
+
+// Map GitHub-detected languages onto the form's chip options (transparent: the
+// user sees what was inferred and can edit it).
+function detectedToChips(langs: string[]): string[] {
+  const opts = LANGUAGE_OPTIONS.filter((o) => o !== "None");
+  return opts.filter((o) =>
+    langs.some((d) => d.toLowerCase() === o.toLowerCase()),
+  );
+}
 
 export default function Home() {
   const [profile, setProfile] = useState<Profile>(EMPTY_PROFILE);
@@ -39,7 +53,17 @@ export default function Home() {
         body: JSON.stringify(p),
       });
       const data: RobinResponse = await res.json();
-      if (reqId === reqRef.current) setResult(data);
+      if (reqId === reqRef.current) {
+        setResult(data);
+        try {
+          localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify({ profile: p, result: data }),
+          );
+        } catch {
+          /* storage unavailable — non-fatal */
+        }
+      }
     } catch {
       if (reqId === reqRef.current) setResult(null);
     } finally {
@@ -65,11 +89,39 @@ export default function Home() {
     setProfile((prev) => ({ ...prev, ...patch }));
   }
 
-  // Deep-link a preset for screenshots / a bulletproof demo backup.
+  // When GitHub connects, reflect the detected languages in the form chips so
+  // the inference is transparent and editable. Stable identity (no refetch loop).
+  const applyGithubSkills = useCallback(
+    (summary: { topLanguages?: { name: string }[] }) => {
+      const chips = detectedToChips(
+        (summary.topLanguages ?? []).map((l) => l.name),
+      );
+      if (chips.length) {
+        setProfile((prev) => ({ ...prev, languages: chips }));
+      }
+    },
+    [],
+  );
+
+  // On load: a ?persona deep-link wins; otherwise restore the persisted session
+  // (so connecting GitHub — a full-page redirect — doesn't lose your results).
   useEffect(() => {
     const want = new URLSearchParams(window.location.search).get("persona");
     const p = PERSONAS.find((x) => x.id === want);
-    if (p) pickPreset(p);
+    if (p) {
+      pickPreset(p);
+      return;
+    }
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const saved = JSON.parse(raw);
+        if (saved?.profile) setProfile(saved.profile);
+        if (saved?.result) setResult(saved.result);
+      }
+    } catch {
+      /* ignore */
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -103,7 +155,7 @@ export default function Home() {
       {/* ── Intake ─────────────────────────────────────────── */}
       <div className="flex flex-col items-center gap-4">
         <PersonaChips active={active} busy={busy} onPick={pickPreset} />
-        <GithubConnect />
+        <GithubConnect onConnect={applyGithubSkills} />
         <Composer
           profile={profile}
           onChange={patchProfile}

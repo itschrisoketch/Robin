@@ -1,14 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
+type Summary = {
+  login: string;
+  topLanguages?: { name: string; percent: number }[];
+};
 type Me = {
   configured: boolean;
   connected: boolean;
-  summary?: {
-    login: string;
-    topLanguages?: { name: string; percent: number }[];
-  } | null;
+  summary?: Summary | null;
 };
 
 function GhIcon({ size = 16 }: { size?: number }) {
@@ -23,18 +24,30 @@ function GhIcon({ size = 16 }: { size?: number }) {
   );
 }
 
-export function GithubConnect() {
+export function GithubConnect({
+  onConnect,
+}: {
+  onConnect?: (summary: Summary) => void;
+}) {
   const [me, setMe] = useState<Me | null>(null);
   const [working, setWorking] = useState(false);
+  const fired = useRef(false);
 
   const refresh = useCallback(async () => {
     try {
       const r = await fetch("/api/auth/github/me");
-      setMe(await r.json());
+      const d: Me = await r.json();
+      setMe(d);
+      // Fire once when connected, so the page can reflect detected skills.
+      if (d.connected && d.summary && !fired.current) {
+        fired.current = true;
+        onConnect?.(d.summary);
+      }
+      if (!d.connected) fired.current = false;
     } catch {
       setMe({ configured: false, connected: false });
     }
-  }, []);
+  }, [onConnect]);
 
   useEffect(() => {
     refresh();
