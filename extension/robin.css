@@ -160,6 +160,10 @@
 .robin-input:focus {
   border-color: rgba(247, 147, 26, 0.6);
 }
+select.robin-input {
+  cursor: pointer;
+  appearance: none;
+}
 .robin-mono {
   font-family: "GeistMonoVF", ui-monospace, monospace;
 }

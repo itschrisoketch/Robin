@@ -3,6 +3,12 @@
 
 const DEFAULT_BACKEND = "https://buildwithrobin.vercel.app";
 
+// Selectable target repos — mirrors TARGET_REPOS in app/lib/personas.ts.
+const ROBIN_TARGET_REPOS = [
+  { label: "Bitcoin Core", repo: "bitcoin/bitcoin" },
+  { label: "Proto Fleet", repo: "block/proto-fleet" },
+];
+
 const ROBIN_PRESETS = [
   {
     id: "bootcamp",

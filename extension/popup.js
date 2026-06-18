@@ -18,8 +18,16 @@ let profile = {
 
 let busy = false;
 
+// Populate the target-repo dropdown (Bitcoin Core / Proto Fleet).
+ROBIN_TARGET_REPOS.forEach((r) => {
+  const o = document.createElement("option");
+  o.value = r.repo;
+  o.textContent = `${r.label} — ${r.repo}`;
+  repoEl.appendChild(o);
+});
+
 function syncFormToProfile() {
-  profile.targetRepo = repoEl.value.trim() || "bitcoin/bitcoin";
+  profile.targetRepo = repoEl.value || "bitcoin/bitcoin";
   profile.goals = goalsEl.value.trim();
 }
 
@@ -60,18 +68,22 @@ document.getElementById("robin-options").addEventListener("click", (e) => {
   chrome.runtime.openOptionsPage();
 });
 
-// Pre-fill the target repo from the active GitHub tab, if any.
+// Pre-select the dropdown from the active GitHub tab when it's one of the
+// supported targets; otherwise leave the default (Bitcoin Core).
 try {
+  const targets = ROBIN_TARGET_REPOS.map((r) => r.repo);
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const url = tabs && tabs[0] && tabs[0].url;
     if (!url) return;
     const m = url.match(/^https:\/\/github\.com\/([^/]+)\/([^/?#]+)/);
-    if (m && !["orgs", "settings", "marketplace"].includes(m[1])) {
-      repoEl.value = `${m[1]}/${m[2]}`;
-    } else {
-      repoEl.value = "bitcoin/bitcoin";
+    if (m) {
+      const full = `${m[1]}/${m[2]}`;
+      if (targets.includes(full)) {
+        repoEl.value = full;
+        profile.targetRepo = full;
+      }
     }
   });
 } catch {
-  repoEl.value = "bitcoin/bitcoin";
+  /* default option (Bitcoin Core) stays selected */
 }
