@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="robin.css" />
+    <title>Robin — settings</title>
+  </head>
+  <body class="robin-popup" style="width: 460px">
+    <header class="robin-head">
+      <div class="robin-wordmark">
+        <span class="robin-bird">&#x1F426;</span>
+        <span class="robin-name">Robin</span>
+      </div>
+      <p class="robin-tag">Settings</p>
+    </header>
+    <section class="robin-intake">
+      <div class="robin-label">Backend URL</div>
+      <input id="robin-backend" class="robin-input robin-mono" placeholder="http://localhost:3000" />
+      <p class="robin-tag" style="font-style: normal; font-family: inherit; font-size: 11.5px; margin-top: 8px">
+        Where your Robin Next.js app runs. The OpenRouter and GitHub keys live
+        there, never in this extension. For the demo, run <span class="robin-mono">pnpm dev</span> and use the default.
+      </p>
+      <button id="robin-save" class="robin-go">Save</button>
+      <p id="robin-saved" class="robin-tag" style="display: none; color: var(--orange)">Saved.</p>
+    </section>
+    <script src="options.js"></script>
+  </body>
+</html>

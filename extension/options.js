@@ -1,0 +1,15 @@
+const DEFAULT_BACKEND = "http://localhost:3000";
+const input = document.getElementById("robin-backend");
+const saved = document.getElementById("robin-saved");
+
+chrome.storage.sync.get({ backend: DEFAULT_BACKEND }, (v) => {
+  input.value = (v && v.backend) || DEFAULT_BACKEND;
+});
+
+document.getElementById("robin-save").addEventListener("click", () => {
+  const backend = (input.value || DEFAULT_BACKEND).trim().replace(/\/+$/, "");
+  chrome.storage.sync.set({ backend }, () => {
+    saved.style.display = "block";
+    setTimeout(() => (saved.style.display = "none"), 1500);
+  });
+});

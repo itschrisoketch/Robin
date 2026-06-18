@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="robin.css" />
+    <title>Robin</title>
+  </head>
+  <body class="robin-popup">
+    <header class="robin-head">
+      <div class="robin-wordmark">
+        <span class="robin-bird">&#x1F426;</span>
+        <span class="robin-name">Robin</span>
+      </div>
+      <p class="robin-tag">A path into Bitcoin open source.</p>
+    </header>
+
+    <section class="robin-intake">
+      <div class="robin-label">Quick presets</div>
+      <div id="robin-presets" class="robin-presets"></div>
+
+      <div class="robin-label">Target repo</div>
+      <input id="robin-repo" class="robin-input robin-mono" placeholder="owner/name" />
+
+      <div class="robin-label">Your goal</div>
+      <textarea id="robin-goals" class="robin-input" rows="2" placeholder="What do you want to work on, and why?"></textarea>
+
+      <button id="robin-go" class="robin-go">Find my path</button>
+    </section>
+
+    <section id="robin-out" class="robin-out"></section>
+
+    <footer class="robin-foot">
+      <a id="robin-options" href="#">Settings</a>
+      <span>RAG, not fine-tuning.</span>
+    </footer>
+
+    <script src="presets.js"></script>
+    <script src="render.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>
