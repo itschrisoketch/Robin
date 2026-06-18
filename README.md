@@ -160,6 +160,12 @@ Secrets live in `.env.local`, which is gitignored. Never commit real keys.
 
 ---
 
+## Roadmap
+
+See [docs/ROADMAP.md](docs/ROADMAP.md). Next up: a **Project Needs Portal**
+(maintainers publish what they need → two-sided matching) and **Connect GitHub**
+(infer a contributor's real expertise from their history instead of self-report).
+
 ## License
 
 MIT

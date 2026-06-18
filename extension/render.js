@@ -80,13 +80,9 @@ function robinResults(el, d) {
   const intro = (d.intro || [])
     .map((p) => `<p>${robinEsc(p)}</p>`)
     .join("");
-  const banner =
-    isRedirect && d.verdict
-      ? `<div class="robin-banner">
-           <div class="robin-banner-head">${robinEsc(d.verdict.headline)}</div>
-           <p>${robinEsc(d.verdict.sub)}</p>
-         </div>`
-      : "";
+  // No verdict banner in the extension: a fixed headline like "Not Core. Not
+  // yet." reads as nonsense when you're viewing a non-Core repo. The intro +
+  // ranked cards carry the redirect on their own.
   const cards = (d.recs || []).map((r) => robinCardHTML(r, isRedirect)).join("");
   const sources = (d.sources || [])
     .map((s) => `<li>${robinEsc(s)}</li>`)
@@ -101,7 +97,6 @@ function robinResults(el, d) {
       <span class="robin-src">${live}</span>
     </div>
     <div class="robin-voice">${intro}</div>
-    ${banner}
     <div class="robin-cards">${cards}</div>
     ${d.closer ? `<p class="robin-closer">${robinEsc(d.closer)}</p>` : ""}
     ${sources ? `<div class="robin-prov"><span class="robin-k">Read to answer</span><ul class="robin-list">${sources}</ul></div>` : ""}`;
