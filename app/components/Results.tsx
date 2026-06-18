@@ -297,12 +297,12 @@ export function Results({ response }: { response: RobinResponse }) {
 /* ── The dogfood meta-flex (always visible) ───────────────── */
 export function DogfoodCallout() {
   return (
-    <div className="rounded-xl border border-robin/40 bg-robin-tint/40 p-5">
-      <div className="flex items-start gap-3.5">
-        <span className="text-[1.3rem] leading-none">🍴</span>
+    <div className="rounded-xl border border-hairline bg-paper-raised p-5">
+      <div className="flex items-start gap-4">
+        <span className="mt-0.5 h-9 w-1 shrink-0 rounded-full bg-robin" aria-hidden="true" />
         <div>
           <div className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-robin">
-            We ate our own dogfood
+            We used Robin ourselves
           </div>
           <p className="mt-1.5 max-w-[60ch] text-[0.92rem] leading-relaxed text-ink-soft">
             Robin told us where to contribute during the hackathon — so we did.
