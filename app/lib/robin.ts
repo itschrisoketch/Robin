@@ -9,6 +9,10 @@ import {
   resolvePersona,
 } from "@/app/lib/personas";
 import { buildLiveContext } from "@/app/lib/github";
+import {
+  type GithubSummary,
+  formatGithubSummary,
+} from "@/app/lib/githubProfile";
 
 const OPENROUTER_BASE_URL =
   process.env.OPENROUTER_BASE_URL ?? "https://openrouter.ai/api/v1";
@@ -73,17 +77,25 @@ Return ONLY a JSON object (no markdown, no prose around it) matching exactly thi
 
 type ProfileWithRepo = Profile & { targetRepo: string };
 
-function buildUserMessage(profile: ProfileWithRepo): string {
+function buildUserMessage(
+  profile: ProfileWithRepo,
+  github?: GithubSummary | null,
+): string {
   const langs = profile.languages.length
     ? profile.languages.join(", ")
     : "none (not an engineer)";
+  const githubBlock = github
+    ? `\n\nOBSERVED GITHUB HISTORY (the contributor connected their account — this is real evidence of what they can actually do; weigh it OVER their self-description, and call out where the two differ, e.g. "you listed beginner but you've shipped real Rust"): ${formatGithubSummary(
+        github,
+      )}`
+    : "";
   return `A contributor wants guidance. Their profile:
 - Languages: ${langs}
 - Years of experience: ${profile.yearsExperience}
 - Interests: ${profile.interests.join(", ") || "unspecified"}
 - Hours per week available: ${profile.hoursPerWeek}
 - Their goal: ${profile.goals}
-- Repo they're aiming at: ${profile.targetRepo}
+- Repo they're aiming at: ${profile.targetRepo}${githubBlock}
 
 Give them your honest recommendation as the JSON object.`;
 }
@@ -117,6 +129,7 @@ export type RecommendResult = {
 
 export async function getRecommendation(
   profile: ProfileWithRepo,
+  github?: GithubSummary | null,
 ): Promise<RecommendResult> {
   const fallback = resolvePersona(profile).response;
   const apiKey = process.env.OPENROUTER_API_KEY;
@@ -147,7 +160,7 @@ export async function getRecommendation(
         model: OPENROUTER_MODEL,
         messages: [
           { role: "system", content: systemContent },
-          { role: "user", content: buildUserMessage(profile) },
+          { role: "user", content: buildUserMessage(profile, github) },
         ],
         response_format: { type: "json_object" },
         // Note: no `temperature` — Opus 4.8 rejects sampling params (400).

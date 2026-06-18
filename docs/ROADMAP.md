@@ -40,7 +40,12 @@ to an org's internal/inner-source repos.
 
 ---
 
-## 2. Connect GitHub — infer expertise from history **(Planned)**
+## 2. Connect GitHub — infer expertise from history **(Shipped)**
+
+> Built: OAuth (`read:user`) → scan public repos/languages → derive a skill
+> summary → fed into the recommendation; the token is discarded, only the
+> derived summary is kept (httpOnly cookie, 1-day). Set `GITHUB_OAUTH_CLIENT_ID`
+> / `GITHUB_OAUTH_CLIENT_SECRET` to enable the "Connect GitHub" button.
 
 **Problem.** Today a newcomer self-describes (languages, years, interests) or
 types free text. That's a guess, and beginners are the worst at estimating their

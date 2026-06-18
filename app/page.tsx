@@ -8,11 +8,8 @@ import {
   type RobinResponse,
 } from "@/app/lib/personas";
 import { PersonaChips, Composer } from "@/app/components/Intake";
-import {
-  Results,
-  ResultsSkeleton,
-  DogfoodCallout,
-} from "@/app/components/Results";
+import { Results, ResultsSkeleton } from "@/app/components/Results";
+import { GithubConnect } from "@/app/components/GithubConnect";
 import { RobinMark } from "@/app/components/icons";
 
 const EMPTY_PROFILE: Profile = {
@@ -106,6 +103,7 @@ export default function Home() {
       {/* ── Intake ─────────────────────────────────────────── */}
       <div className="flex flex-col items-center gap-4">
         <PersonaChips active={active} busy={busy} onPick={pickPreset} />
+        <GithubConnect />
         <Composer
           profile={profile}
           onChange={patchProfile}
@@ -123,12 +121,7 @@ export default function Home() {
         ) : null}
       </section>
 
-      {/* ── Dogfood (always visible) ───────────────────────── */}
-      <div className="mt-10">
-        <DogfoodCallout />
-      </div>
-
-      <footer className="mt-8 text-center font-mono text-[0.62rem] text-ink-faint">
+      <footer className="mt-12 text-center font-mono text-[0.62rem] text-ink-faint">
         RAG, not fine-tuning · open issues · last ~100 merged PRs · CONTRIBUTING
       </footer>
     </main>

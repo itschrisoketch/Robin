@@ -1,5 +1,7 @@
+import { cookies } from "next/headers";
 import { getRecommendation } from "@/app/lib/robin";
 import type { Profile } from "@/app/lib/personas";
+import { COOKIE_SUMMARY, decodeSummary } from "@/app/lib/githubOAuth";
 
 // Reasoning models (e.g. Opus 4.8) take ~25-35s. Vercel kills serverless
 // functions early by default — give this route room so it isn't truncated.
@@ -41,6 +43,10 @@ export async function POST(request: Request) {
         : "bitcoin/bitcoin",
   };
 
-  const { response, source } = await getRecommendation(profile);
+  // If the contributor connected GitHub, fold their derived skill summary in.
+  const cookieStore = await cookies();
+  const github = decodeSummary(cookieStore.get(COOKIE_SUMMARY)?.value);
+
+  const { response, source } = await getRecommendation(profile, github);
   return Response.json({ ...response, _source: source }, { headers: CORS });
 }
