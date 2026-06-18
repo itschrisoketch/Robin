@@ -70,6 +70,8 @@
       panel = null;
     });
 
+    const storeKey = `robin:panel:${repo}`;
+
     ROBIN_PRESETS.forEach((p) => {
       const b = document.createElement("button");
       b.className = "robin-preset";
@@ -80,11 +82,19 @@
         try {
           const data = await recommend(profile);
           robinResults(out, data);
+          // Persist per-repo so reopening the panel on this repo restores it.
+          robinStoreSet({ [storeKey]: { profile, response: data } });
         } catch (e) {
           robinError(out, e && e.message ? e.message : String(e));
         }
       });
       presetsWrap.appendChild(b);
+    });
+
+    // Restore the last result for this repo, if any.
+    robinStoreGet(storeKey).then((v) => {
+      const last = v && v[storeKey];
+      if (last && last.response && panel) robinResults(out, last.response);
     });
   }
 

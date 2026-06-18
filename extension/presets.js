@@ -68,6 +68,33 @@ function robinLogo(size) {
   );
 }
 
+// Lightweight local persistence (no auth, no server). chrome.storage.local
+// survives the popup/panel closing and browser restarts; swap to
+// chrome.storage.session if you'd rather it clear when the browser quits.
+function robinStoreSet(obj) {
+  try {
+    chrome.storage.local.set(obj);
+  } catch {
+    /* storage unavailable — non-fatal */
+  }
+}
+function robinStoreGet(keys) {
+  return new Promise((resolve) => {
+    try {
+      chrome.storage.local.get(keys, (v) => resolve(v || {}));
+    } catch {
+      resolve({});
+    }
+  });
+}
+function robinStoreRemove(keys) {
+  try {
+    chrome.storage.local.remove(keys);
+  } catch {
+    /* non-fatal */
+  }
+}
+
 function robinGetBackend() {
   return new Promise((resolve) => {
     try {

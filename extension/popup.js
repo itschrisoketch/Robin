@@ -55,11 +55,31 @@ async function run() {
   try {
     const data = await robinFetch(profile);
     robinResults(outEl, data);
+    // Persist so reopening the popup restores this result (no auth/server).
+    robinStoreSet({ "robin:last": { profile, response: data } });
+    showReset();
   } catch (e) {
     robinError(outEl, e && e.message ? e.message : String(e));
   } finally {
     busy = false;
   }
+}
+
+// A small "New search" affordance once a result is showing.
+function showReset() {
+  if (document.getElementById("robin-reset")) return;
+  const link = document.createElement("a");
+  link.id = "robin-reset";
+  link.href = "#";
+  link.textContent = "New search";
+  link.addEventListener("click", (e) => {
+    e.preventDefault();
+    robinStoreRemove("robin:last");
+    outEl.innerHTML = "";
+    goalsEl.value = "";
+    link.remove();
+  });
+  document.querySelector(".robin-foot").prepend(link);
 }
 
 document.getElementById("robin-go").addEventListener("click", run);
@@ -68,22 +88,37 @@ document.getElementById("robin-options").addEventListener("click", (e) => {
   chrome.runtime.openOptionsPage();
 });
 
-// Pre-select the dropdown from the active GitHub tab when it's one of the
-// supported targets; otherwise leave the default (Bitcoin Core).
-try {
-  const targets = ROBIN_TARGET_REPOS.map((r) => r.repo);
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const url = tabs && tabs[0] && tabs[0].url;
-    if (!url) return;
-    const m = url.match(/^https:\/\/github\.com\/([^/]+)\/([^/?#]+)/);
-    if (m) {
-      const full = `${m[1]}/${m[2]}`;
-      if (targets.includes(full)) {
-        repoEl.value = full;
-        profile.targetRepo = full;
+// On open: restore the last result if we have one; otherwise pre-select the
+// dropdown from the active GitHub tab.
+function prefillFromTab() {
+  try {
+    const targets = ROBIN_TARGET_REPOS.map((r) => r.repo);
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const url = tabs && tabs[0] && tabs[0].url;
+      if (!url) return;
+      const m = url.match(/^https:\/\/github\.com\/([^/]+)\/([^/?#]+)/);
+      if (m) {
+        const full = `${m[1]}/${m[2]}`;
+        if (targets.includes(full)) {
+          repoEl.value = full;
+          profile.targetRepo = full;
+        }
       }
-    }
-  });
-} catch {
-  /* default option (Bitcoin Core) stays selected */
+    });
+  } catch {
+    /* default option (Bitcoin Core) stays selected */
+  }
 }
+
+(async () => {
+  const { "robin:last": last } = await robinStoreGet("robin:last");
+  if (last && last.response && last.profile) {
+    profile = { ...profile, ...last.profile };
+    repoEl.value = profile.targetRepo;
+    goalsEl.value = profile.goals || "";
+    robinResults(outEl, last.response);
+    showReset();
+  } else {
+    prefillFromTab();
+  }
+})();
