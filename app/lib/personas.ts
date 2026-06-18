@@ -356,6 +356,12 @@ export function recUrl(rec: { url?: string; repo: string }): string {
     : "https://github.com/bitcoin/bitcoin";
 }
 
+// Target repos a contributor can aim at (the intake dropdown).
+export const TARGET_REPOS = [
+  { label: "Bitcoin Core", repo: "bitcoin/bitcoin" },
+  { label: "Proto Fleet", repo: "block/proto-fleet" },
+];
+
 // Option pools for the intake form.
 export const LANGUAGE_OPTIONS = ["C++", "Rust", "Python", "TypeScript", "Go", "None"];
 export const INTEREST_OPTIONS = [

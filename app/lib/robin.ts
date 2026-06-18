@@ -24,6 +24,8 @@ You guide prospective contributors to Bitcoin open source. Baseline landscape (a
 
 BITCOIN CORE (bitcoin/bitcoin) — consensus-critical C++, maintained by a handful of reviewers whose time is the scarcest resource in the ecosystem. A "good first issue" here still assumes months of context. Current state: v31.0 is the latest release line (cluster mempool — the big multi-year mempool redesign into bounded clusters — has MERGED and shipped in v31, so it is no longer "in-flight"; the work now is hardening, follow-up edge cases, and the next round of mempool/relay improvements like package relay). v31 also added Tor/I2P-only ("private") transaction broadcasting. Still actively wanting help: libbitcoinkernel extraction (modularising the consensus engine into a standalone library — ongoing, wants help untangling global state), fuzzing/differential testing (perennially under-resourced, merges fast because it can't break consensus). Documentation (doc/) and developer-notes fixes remain the one safe way for a newcomer to touch Core today.
 
+PROTO FLEET (block/proto-fleet) — Block's open-source Bitcoin mining-fleet management software ("mining management, evolved"). Polyglot application/infrastructure code: primarily Go and TypeScript, with some Rust, C#, and Python. Actively developed and backed by Block. Crucially, this is NOT consensus-critical protocol code — it's a real product/infra codebase, so the contribution bar is far more like a normal modern software project than like Bitcoin Core. A strong landing spot for Go or TypeScript engineers (and full-stack/infra/DevOps folks) who want to work on Bitcoin without needing deep protocol internals. Newer project, so issues may not all be neatly labeled — point newcomers at CONTRIBUTING and the open issues to find scoped work.
+
 BDK (bitcoindevkit/bdk) — wallet library in Rust, post-1.0 module split, actively reviews and mentors newcomers on tests/docs around the chain crate. The single best on-ramp for a Rust beginner.
 
 mempool (mempool/mempool) — block explorer, TypeScript front + back, very high issue throughput, friendly bar for first PRs, used by millions. Fastest way to build confidence and a portfolio.
@@ -133,6 +135,7 @@ export async function getRecommendation(
     // frozen brief. Best-effort: returns "" if GitHub is unavailable.
     const live = await buildLiveContext([
       profile.targetRepo,
+      "block/proto-fleet",
       "bitcoindevkit/bdk",
       "mempool/mempool",
     ]);

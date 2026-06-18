@@ -7,6 +7,7 @@ import {
   type Profile,
   LANGUAGE_OPTIONS,
   INTEREST_OPTIONS,
+  TARGET_REPOS,
 } from "@/app/lib/personas";
 import { ArrowUp } from "@/app/components/icons";
 
@@ -125,14 +126,19 @@ export function Composer({
         <div className="mt-1 flex items-center gap-2">
           <label className="flex min-w-0 flex-1 items-center gap-2 rounded-lg bg-paper-sunk px-2.5 py-1.5">
             <span className="shrink-0 font-mono text-[0.6rem] uppercase tracking-wide text-ink-faint">
-              repo
+              target
             </span>
-            <input
+            <select
               value={profile.targetRepo}
               onChange={(e) => onChange({ targetRepo: e.target.value })}
-              placeholder="owner/name"
-              className="min-w-0 flex-1 bg-transparent font-mono text-[0.78rem] text-ink placeholder:text-ink-faint focus:outline-none"
-            />
+              className="min-w-0 flex-1 cursor-pointer bg-transparent font-mono text-[0.78rem] text-ink focus:outline-none"
+            >
+              {TARGET_REPOS.map((r) => (
+                <option key={r.repo} value={r.repo}>
+                  {r.label} — {r.repo}
+                </option>
+              ))}
+            </select>
           </label>
           <button
             type="button"
