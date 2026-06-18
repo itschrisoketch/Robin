@@ -1,30 +1,51 @@
-/* Robin extension — black canvas, Bitcoin-orange accent.
+/* Robin extension — LIGHT theme, Geist type, single Bitcoin-orange accent.
    Namespaced (.robin-*) and scoped (.robin-scope) so injected UI survives on
    GitHub without clobbering (or being clobbered by) the host page. */
 
+@font-face {
+  font-family: "GeistVF";
+  src: url("fonts/Geist-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "GeistMonoVF";
+  src: url("fonts/GeistMono-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
 .robin-popup,
 .robin-scope {
-  --bg: #000;
-  --raised: #161513;
-  --sunk: #0f0e0d;
-  --ink: #f5f3ef;
-  --soft: #b9b4ab;
-  --faint: #8a857c;
-  --hair: #2a2926;
+  --bg: #f7f7f8;
+  --raised: #ffffff;
+  --sunk: #f1f1f3;
+  --ink: #1c1c1f;
+  --soft: #5a5a63;
+  --faint: #8a8a93;
+  --hair: #e4e4e8;
   --orange: #f7931a;
-  --orange-deep: #d97b06;
-  --orange-tint: rgba(247, 147, 26, 0.14);
-  --honey: #e8b34a;
-  --honey-surface: rgba(232, 179, 74, 0.12);
-  --honey-edge: rgba(232, 179, 74, 0.4);
+  --orange-deep: #c26a05;
+  --orange-tint: #fdf0e0;
+  --honey-surface: #fdf3e6;
+  --honey-edge: #f0c489;
+  --honey-deep: #b5630a;
   box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "GeistVF", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--ink);
   line-height: 1.5;
 }
 .robin-popup *,
 .robin-scope * {
   box-sizing: border-box;
+}
+
+.robin-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--orange);
 }
 
 /* ── Popup shell ─────────────────────────────────────────── */
@@ -43,18 +64,13 @@
   align-items: center;
   gap: 8px;
 }
-.robin-bird {
-  font-size: 20px;
-}
 .robin-name {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 24px;
-  letter-spacing: -0.01em;
+  font-weight: 600;
+  font-size: 22px;
+  letter-spacing: -0.02em;
 }
 .robin-tag {
   margin: 6px 0 0;
-  font-family: Georgia, serif;
-  font-style: italic;
   color: var(--soft);
   font-size: 13px;
 }
@@ -85,13 +101,13 @@
   text-align: left;
   background: var(--raised);
   border: 1px solid var(--hair);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 9px 11px;
   cursor: pointer;
   transition: border-color 0.15s, transform 0.15s;
 }
 .robin-preset:hover {
-  border-color: rgba(247, 147, 26, 0.5);
+  border-color: rgba(247, 147, 26, 0.55);
   transform: translateY(-1px);
 }
 .robin-preset-name {
@@ -107,7 +123,7 @@
   width: 100%;
   background: var(--sunk);
   border: 1px solid var(--hair);
-  border-radius: 8px;
+  border-radius: 10px;
   color: var(--ink);
   padding: 8px 10px;
   font-size: 13px;
@@ -118,7 +134,7 @@
   border-color: rgba(247, 147, 26, 0.6);
 }
 .robin-mono {
-  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-family: "GeistMonoVF", ui-monospace, monospace;
 }
 .robin-go {
   margin-top: 12px;
@@ -127,7 +143,7 @@
   color: #1a1206;
   font-weight: 700;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 10px;
   cursor: pointer;
   font-size: 13px;
@@ -150,7 +166,7 @@
   color: var(--faint);
 }
 .robin-foot a {
-  color: var(--orange);
+  color: var(--orange-deep);
   text-decoration: none;
 }
 
@@ -164,20 +180,20 @@
   color: var(--faint);
 }
 .robin-fit {
-  color: var(--orange);
-  font-family: ui-monospace, monospace;
+  color: var(--orange-deep);
+  font-family: "GeistMonoVF", monospace;
 }
 .robin-fit-redirect {
-  color: var(--honey);
+  color: var(--honey-deep);
 }
 .robin-src {
   margin-left: auto;
-  font-family: ui-monospace, monospace;
+  font-family: "GeistMonoVF", monospace;
 }
 .robin-voice {
-  font-family: Georgia, serif;
   font-size: 16px;
-  line-height: 1.5;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
 }
 .robin-voice p {
   margin: 0 0 8px;
@@ -185,7 +201,7 @@
 .robin-banner {
   border: 1px solid var(--honey-edge);
   background: var(--honey-surface);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 12px 14px;
   margin: 12px 0;
 }
@@ -193,11 +209,13 @@
   font-size: 9.5px;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  color: var(--honey);
+  color: var(--honey-deep);
+  font-family: "GeistMonoVF", monospace;
 }
 .robin-banner-head {
-  font-family: Georgia, serif;
   font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
   margin: 4px 0;
 }
 .robin-banner p {
@@ -214,7 +232,7 @@
 .robin-card {
   border: 1px solid var(--hair);
   background: var(--raised);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 13px;
 }
 .robin-card.robin-redirect {
@@ -226,12 +244,13 @@
   align-items: baseline;
 }
 .robin-rank {
-  font-family: Georgia, serif;
-  font-size: 22px;
-  color: var(--orange);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--orange-deep);
+  font-variant-numeric: tabular-nums;
 }
 .robin-redirect .robin-rank {
-  color: var(--honey);
+  color: var(--honey-deep);
 }
 .robin-repo {
   font-size: 11px;
@@ -241,6 +260,7 @@
   font-size: 14px;
   font-weight: 600;
   margin-top: 2px;
+  letter-spacing: -0.01em;
 }
 .robin-signal {
   display: inline-block;
@@ -251,7 +271,7 @@
   border-radius: 999px;
   padding: 2px 9px;
   font-size: 10px;
-  font-family: ui-monospace, monospace;
+  font-family: "GeistMonoVF", monospace;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -265,6 +285,7 @@
   letter-spacing: 0.16em;
   color: var(--faint);
   margin-bottom: 3px;
+  font-family: "GeistMonoVF", monospace;
 }
 .robin-sec p {
   margin: 0;
@@ -282,17 +303,16 @@
   margin-bottom: 4px;
 }
 .robin-bullet {
-  color: var(--orange);
+  color: var(--orange-deep);
   margin-right: 6px;
 }
 .robin-redirect .robin-bullet {
-  color: var(--honey);
+  color: var(--honey-deep);
 }
 .robin-note {
   color: var(--faint);
 }
 .robin-closer {
-  font-family: Georgia, serif;
   font-size: 14px;
   color: var(--soft);
   margin: 12px 0 0;
@@ -344,7 +364,7 @@
   height: 70px;
   border: 1px solid var(--hair);
   background: var(--raised);
-  border-radius: 10px;
+  border-radius: 12px;
   margin-bottom: 10px;
   animation: robin-fade 1.2s infinite;
 }
@@ -360,7 +380,7 @@
 .robin-errcard {
   border: 1px solid var(--hair);
   background: var(--raised);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 13px;
   margin-top: 14px;
   font-size: 13px;
@@ -382,7 +402,7 @@
   z-index: 2147483646 !important;
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   background: var(--orange) !important;
   color: #1a1206 !important;
   border: none !important;
@@ -391,7 +411,7 @@
   font-size: 13px !important;
   font-weight: 700 !important;
   cursor: pointer;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
 }
 .robin-fab:hover {
   opacity: 0.93;
@@ -406,7 +426,7 @@
   z-index: 2147483647 !important;
   background: var(--bg) !important;
   border-left: 1px solid var(--hair);
-  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
+  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.14);
   overflow-y: auto;
   padding: 16px;
 }
@@ -424,8 +444,9 @@
   cursor: pointer;
 }
 .robin-panel-repo {
-  font-family: Georgia, serif;
   font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
   margin: 12px 0 4px;
 }
 .robin-panel-q {

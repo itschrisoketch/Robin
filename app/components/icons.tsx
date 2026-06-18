@@ -73,6 +73,25 @@ export function Arrow({ size = 16 }: { size?: number }) {
   );
 }
 
+export function ArrowUp({ size = 18 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M12 19V5" />
+      <path d="M6 11l6-6 6 6" />
+    </svg>
+  );
+}
+
 export function BookMark({ size = 13 }: { size?: number }) {
   // tiny "read first" glyph — an open page
   return (

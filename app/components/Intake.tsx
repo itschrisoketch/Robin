@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   PERSONAS,
   type Persona,
@@ -7,10 +8,10 @@ import {
   LANGUAGE_OPTIONS,
   INTEREST_OPTIONS,
 } from "@/app/lib/personas";
-import { Arrow } from "@/app/components/icons";
+import { ArrowUp } from "@/app/components/icons";
 
-/* ── Persona presets — the demo spine ─────────────────────── */
-export function PersonaPresets({
+/* ── Quick-start chips — the obvious "I'm one of these" path ─ */
+export function PersonaChips({
   active,
   busy,
   onPick,
@@ -20,57 +21,30 @@ export function PersonaPresets({
   onPick: (p: Persona) => void;
 }) {
   return (
-    <div>
-      <div className="mb-2.5 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ink-faint">
-        Quick presets
-      </div>
-      <div className="flex flex-col gap-2.5">
-        {PERSONAS.map((p, idx) => {
-          const selected = active === p.id;
-          return (
-            <button
-              key={p.id}
-              onClick={() => onPick(p)}
-              disabled={busy}
-              style={{ animationDelay: `${120 + idx * 90}ms` }}
-              className={[
-                "animate-rise group rounded-xl border p-4 text-left transition-all duration-300",
-                "disabled:cursor-not-allowed disabled:opacity-60",
-                selected
-                  ? "border-robin bg-robin-tint shadow-[0_2px_0_var(--color-robin)]"
-                  : "border-hairline bg-paper-raised hover:-translate-y-0.5 hover:border-robin/50",
-              ].join(" ")}
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-[0.58rem] uppercase tracking-[0.16em] text-robin">
-                  {p.badge}
-                </span>
-                <span
-                  className={[
-                    "text-robin transition-transform duration-300",
-                    selected
-                      ? "translate-x-0"
-                      : "-translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-100",
-                  ].join(" ")}
-                >
-                  <Arrow size={15} />
-                </span>
-              </div>
-              <div className="mt-1.5 text-[1rem] font-semibold text-ink">
-                {p.name}
-              </div>
-              <p className="mt-0.5 text-[0.8rem] leading-snug text-ink-soft">
-                {p.summary}
-              </p>
-            </button>
-          );
-        })}
-      </div>
+    <div className="flex flex-wrap justify-center gap-2">
+      {PERSONAS.map((p) => {
+        const selected = active === p.id;
+        return (
+          <button
+            key={p.id}
+            onClick={() => onPick(p)}
+            disabled={busy}
+            className={[
+              "rounded-full border px-3.5 py-1.5 text-[0.82rem] font-medium transition-all duration-200",
+              "disabled:cursor-not-allowed disabled:opacity-50",
+              selected
+                ? "border-robin bg-robin-tint text-robin-deep"
+                : "border-hairline bg-paper-raised text-ink-soft hover:border-robin/50 hover:text-ink",
+            ].join(" ")}
+          >
+            {p.name}
+          </button>
+        );
+      })}
     </div>
   );
 }
 
-/* ── Multi-select chip row ────────────────────────────────── */
 function ChipSelect({
   options,
   selected,
@@ -92,7 +66,7 @@ function ChipSelect({
             className={[
               "rounded-md border px-2 py-1 font-mono text-[0.68rem] transition-colors",
               on
-                ? "border-robin bg-robin-tint text-ink"
+                ? "border-robin bg-robin-tint text-robin-deep"
                 : "border-hairline bg-paper-sunk text-ink-faint hover:border-robin/50",
             ].join(" ")}
           >
@@ -104,8 +78,8 @@ function ChipSelect({
   );
 }
 
-/* ── The structured intake form ───────────────────────────── */
-export function ProfileForm({
+/* ── The composer — primary entry point ───────────────────── */
+export function Composer({
   profile,
   onChange,
   onSubmit,
@@ -116,6 +90,8 @@ export function ProfileForm({
   onSubmit: () => void;
   busy: boolean;
 }) {
+  const [showDetails, setShowDetails] = useState(false);
+
   const toggle = (key: "languages" | "interests") => (value: string) => {
     const cur = profile[key];
     onChange({
@@ -125,87 +101,105 @@ export function ProfileForm({
     });
   };
 
+  function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      if (!busy) onSubmit();
+    }
+  }
+
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        if (!busy) onSubmit();
-      }}
-      className="mt-7 flex flex-col gap-5"
-    >
-      <div className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ink-faint">
-        …or tell us about yourself
-      </div>
-
-      <Field label="Languages">
-        <ChipSelect
-          options={LANGUAGE_OPTIONS}
-          selected={profile.languages}
-          onToggle={toggle("languages")}
-        />
-      </Field>
-
-      <Field label={`Years of experience — ${profile.yearsExperience}`}>
-        <input
-          type="range"
-          min={0}
-          max={20}
-          step={1}
-          value={profile.yearsExperience}
-          onChange={(e) =>
-            onChange({ yearsExperience: Number(e.target.value) })
-          }
-          className="w-full accent-[var(--color-robin)]"
-        />
-      </Field>
-
-      <Field label="Interests">
-        <ChipSelect
-          options={INTEREST_OPTIONS}
-          selected={profile.interests}
-          onToggle={toggle("interests")}
-        />
-      </Field>
-
-      <Field label={`Hours per week — ${profile.hoursPerWeek}`}>
-        <input
-          type="range"
-          min={1}
-          max={40}
-          step={1}
-          value={profile.hoursPerWeek}
-          onChange={(e) => onChange({ hoursPerWeek: Number(e.target.value) })}
-          className="w-full accent-[var(--color-robin)]"
-        />
-      </Field>
-
-      <Field label="Your goal">
+    <div className="w-full">
+      {/* The 20px-radius composer */}
+      <div
+        className="rounded-[20px] border border-hairline bg-paper-raised p-3.5 shadow-[0_2px_16px_-6px_rgba(0,0,0,0.12)] transition-colors focus-within:border-robin/60"
+      >
         <textarea
           value={profile.goals}
           onChange={(e) => onChange({ goals: e.target.value })}
-          rows={3}
-          placeholder="What do you want to work on, and why?"
-          className="w-full resize-none rounded-lg border border-hairline bg-paper-sunk px-3 py-2 text-[0.85rem] text-ink placeholder:text-ink-faint focus:border-robin/60 focus:outline-none"
+          onKeyDown={handleKeyDown}
+          rows={2}
+          placeholder="Tell Robin about yourself — your languages, experience, and what you'd like to work on…"
+          className="w-full resize-none bg-transparent px-2 pt-1 text-[0.98rem] leading-relaxed text-ink placeholder:text-ink-faint focus:outline-none"
         />
-      </Field>
+        <div className="mt-1 flex items-center gap-2">
+          <label className="flex min-w-0 flex-1 items-center gap-2 rounded-lg bg-paper-sunk px-2.5 py-1.5">
+            <span className="shrink-0 font-mono text-[0.6rem] uppercase tracking-wide text-ink-faint">
+              repo
+            </span>
+            <input
+              value={profile.targetRepo}
+              onChange={(e) => onChange({ targetRepo: e.target.value })}
+              placeholder="owner/name"
+              className="min-w-0 flex-1 bg-transparent font-mono text-[0.78rem] text-ink placeholder:text-ink-faint focus:outline-none"
+            />
+          </label>
+          <button
+            type="button"
+            onClick={() => !busy && onSubmit()}
+            disabled={busy}
+            aria-label="Ask Robin"
+            className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-robin text-black transition-all hover:opacity-90 active:scale-95 disabled:opacity-40"
+          >
+            <ArrowUp size={18} />
+          </button>
+        </div>
+      </div>
 
-      <Field label="Target repo">
-        <input
-          value={profile.targetRepo}
-          onChange={(e) => onChange({ targetRepo: e.target.value })}
-          className="w-full rounded-lg border border-hairline bg-paper-sunk px-3 py-2 font-mono text-[0.8rem] text-ink placeholder:text-ink-faint focus:border-robin/60 focus:outline-none"
-        />
-      </Field>
+      {/* Optional structured details — collapsed by default for clarity */}
+      <div className="mt-2.5 text-center">
+        <button
+          type="button"
+          onClick={() => setShowDetails((s) => !s)}
+          className="font-mono text-[0.72rem] text-ink-faint hover:text-robin-deep"
+        >
+          {showDetails ? "Hide details" : "Add details for a sharper read"}
+        </button>
+      </div>
 
-      <button
-        type="submit"
-        disabled={busy}
-        className="mt-1 flex items-center justify-center gap-2 rounded-lg bg-robin px-4 py-2.5 font-semibold text-paper transition-opacity hover:opacity-90 disabled:opacity-50"
-      >
-        {busy ? "Reading the repo…" : "Find my path"}
-        {!busy && <Arrow size={16} />}
-      </button>
-    </form>
+      {showDetails && (
+        <div className="animate-rise-soft mt-3 grid gap-5 rounded-2xl border border-hairline bg-paper-raised p-5">
+          <Field label="Languages">
+            <ChipSelect
+              options={LANGUAGE_OPTIONS}
+              selected={profile.languages}
+              onToggle={toggle("languages")}
+            />
+          </Field>
+          <Field label={`Years of experience — ${profile.yearsExperience}`}>
+            <input
+              type="range"
+              min={0}
+              max={20}
+              step={1}
+              value={profile.yearsExperience}
+              onChange={(e) =>
+                onChange({ yearsExperience: Number(e.target.value) })
+              }
+              className="w-full accent-[var(--color-robin)]"
+            />
+          </Field>
+          <Field label="Interests">
+            <ChipSelect
+              options={INTEREST_OPTIONS}
+              selected={profile.interests}
+              onToggle={toggle("interests")}
+            />
+          </Field>
+          <Field label={`Hours per week — ${profile.hoursPerWeek}`}>
+            <input
+              type="range"
+              min={1}
+              max={40}
+              step={1}
+              value={profile.hoursPerWeek}
+              onChange={(e) => onChange({ hoursPerWeek: Number(e.target.value) })}
+              className="w-full accent-[var(--color-robin)]"
+            />
+          </Field>
+        </div>
+      )}
+    </div>
   );
 }
 

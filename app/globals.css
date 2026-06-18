@@ -1,33 +1,31 @@
 @import "tailwindcss";
 
 /* ── Robin · type & color system ───────────────────────────────────────
-   Dark theme, locked. ONE accent: Bitcoin orange, used sparingly. Neutrals
-   are a single cool-neutral grey scale (no warm/cool fluctuation). Display =
-   Bricolage Grotesque, UI/body = Geist, metadata = Geist Mono. */
+   LIGHT theme, locked. ONE accent: Bitcoin orange, used sparingly. Neutrals
+   are a single cool-neutral grey scale. Display = Bricolage Grotesque,
+   UI/body = Geist, metadata = Geist Mono. */
 
 @theme {
-  /* Neutral scale (cool-neutral, one family) */
-  --color-paper: oklch(0 0 0); /* pure black */
-  --color-paper-raised: oklch(0.205 0.004 264);
-  --color-paper-sunk: oklch(0.155 0.004 264);
-  --color-ink: oklch(0.985 0 0);
-  --color-ink-soft: oklch(0.76 0.006 264);
-  --color-ink-faint: oklch(0.585 0.008 264);
-  --color-hairline: oklch(0.275 0.005 264);
-  --color-hairline-soft: oklch(0.225 0.005 264);
+  /* Neutral scale (light, cool-neutral, one family) */
+  --color-paper: oklch(0.985 0.002 264); /* clean near-white canvas */
+  --color-paper-raised: oklch(1 0 0); /* white cards */
+  --color-paper-sunk: oklch(0.965 0.002 264); /* inset inputs */
+  --color-ink: oklch(0.21 0.004 264);
+  --color-ink-soft: oklch(0.44 0.006 264);
+  --color-ink-faint: oklch(0.595 0.006 264);
+  --color-hairline: oklch(0.9 0.003 264);
+  --color-hairline-soft: oklch(0.94 0.002 264);
 
-  /* The single accent — Bitcoin orange (#f7931a). Used only for the wordmark
-     mark, primary CTA, focus, rank numerals, and the redirect signpost. */
-  --color-robin: oklch(0.73 0.166 58);
-  --color-robin-deep: oklch(0.66 0.16 54);
-  --color-robin-tint: oklch(0.26 0.06 56);
+  /* The single accent — Bitcoin orange (#f7931a). */
+  --color-robin: oklch(0.7 0.17 52); /* brand orange — fills, marks */
+  --color-robin-deep: oklch(0.52 0.16 47); /* orange text/links (AA on white) */
+  --color-robin-tint: oklch(0.955 0.035 60); /* light orange tint surface */
 
-  /* Redirect "signpost" state — same accent, distinct *treatment* (tinted
-     panel + accent hairline), not a competing second hue. */
-  --color-honey: oklch(0.73 0.166 58);
-  --color-honey-surface: oklch(0.225 0.035 56);
-  --color-honey-edge: oklch(0.46 0.1 56);
-  --color-honey-deep: oklch(0.8 0.15 62);
+  /* Redirect "signpost" state — same accent, distinct *treatment*. */
+  --color-honey: oklch(0.7 0.17 52);
+  --color-honey-surface: oklch(0.965 0.03 62);
+  --color-honey-edge: oklch(0.83 0.1 58);
+  --color-honey-deep: oklch(0.5 0.16 46);
 
   --font-display: var(--font-display), "Geist", ui-sans-serif, sans-serif;
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
@@ -68,14 +66,13 @@ body {
   font-feature-settings: "zero", "ss01";
 }
 
-/* Tabular numerals for ranks / scores */
 .tabular-nums {
   font-variant-numeric: tabular-nums;
 }
 
 ::selection {
   background: var(--color-robin);
-  color: var(--color-paper);
+  color: oklch(1 0 0);
 }
 
 /* Clean, consistent focus ring (a11y + polish) */
@@ -100,7 +97,6 @@ textarea:focus-visible {
     transform: translateY(0);
   }
 }
-
 @keyframes rise-soft {
   from {
     opacity: 0;
@@ -111,15 +107,12 @@ textarea:focus-visible {
     transform: translateY(0);
   }
 }
-
 .animate-rise {
   animation: rise 0.6s var(--ease-out-expo) both;
 }
-
 .animate-rise-soft {
   animation: rise-soft 0.5s var(--ease-out-expo) both;
 }
-
 @media (prefers-reduced-motion: reduce) {
   .animate-rise,
   .animate-rise-soft {
@@ -127,7 +120,6 @@ textarea:focus-visible {
   }
 }
 
-/* thin scrollbar that respects the black canvas */
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--color-hairline) transparent;

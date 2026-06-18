@@ -7,10 +7,9 @@ import {
   type Profile,
   type RobinResponse,
 } from "@/app/lib/personas";
-import { PersonaPresets, ProfileForm } from "@/app/components/Intake";
+import { PersonaChips, Composer } from "@/app/components/Intake";
 import {
   Results,
-  ResultsEmpty,
   ResultsSkeleton,
   DogfoodCallout,
 } from "@/app/components/Results";
@@ -43,7 +42,6 @@ export default function Home() {
         body: JSON.stringify(p),
       });
       const data: RobinResponse = await res.json();
-      // Ignore stale responses if a newer query started.
       if (reqId === reqRef.current) setResult(data);
     } catch {
       if (reqId === reqRef.current) setResult(null);
@@ -59,7 +57,8 @@ export default function Home() {
     recommend(p.profile);
   }
 
-  function submitForm() {
+  function submitComposer() {
+    if (!profile.goals.trim() && profile.languages.length === 0) return;
     setActive(null);
     recommend(profile);
   }
@@ -69,8 +68,7 @@ export default function Home() {
     setProfile((prev) => ({ ...prev, ...patch }));
   }
 
-  // Deep-link a preset for screenshots / a bulletproof demo backup:
-  // /?persona=bootcamp | senior | designer auto-runs that preset on load.
+  // Deep-link a preset for screenshots / a bulletproof demo backup.
   useEffect(() => {
     const want = new URLSearchParams(window.location.search).get("persona");
     const p = PERSONAS.find((x) => x.id === want);
@@ -78,67 +76,61 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const started = busy || result;
+
   return (
-    <div className="mx-auto grid min-h-dvh max-w-[1240px] grid-cols-1 lg:grid-cols-[360px_1fr]">
-      {/* ── Intake column ───────────────────────────────── */}
-      <aside className="flex flex-col border-hairline px-6 pt-8 pb-6 lg:sticky lg:top-0 lg:h-dvh lg:overflow-y-auto lg:border-r">
-        <header className="animate-rise">
-          <div className="flex items-center gap-3">
-            <RobinMark size={40} />
-            <span className="font-display text-[2.1rem] leading-none tracking-tight text-ink">
-              Robin
-            </span>
-          </div>
-          <p className="voice mt-3 text-[1.05rem] leading-snug text-ink-soft">
-            A path into Bitcoin open source.
-          </p>
-          <p className="mt-2 max-w-[34ch] text-[0.82rem] leading-relaxed text-ink-faint">
-            What to work on, what to read first, and — when it matters most —
-            when not to contribute yet.
-          </p>
-        </header>
-
-        <div className="mt-7">
-          <PersonaPresets active={active} busy={busy} onPick={pickPreset} />
+    <main className="mx-auto flex min-h-dvh w-full max-w-[720px] flex-col px-6 pb-16">
+      {/* ── Header / instruction ───────────────────────────── */}
+      <header
+        className={[
+          "animate-rise flex flex-col items-center text-center transition-all",
+          started ? "pt-10 pb-6" : "pt-[14vh] pb-8",
+        ].join(" ")}
+      >
+        <div className="flex items-center gap-2.5">
+          <RobinMark size={34} />
+          <span className="font-display text-[1.9rem] leading-none tracking-tight text-ink">
+            Robin
+          </span>
         </div>
+        <h1 className="voice mt-5 max-w-[18ch] text-[1.8rem] text-ink sm:text-[2.1rem]">
+          Find where you&apos;ll actually help in Bitcoin open source.
+        </h1>
+        <p className="mt-3 max-w-[46ch] text-[0.95rem] leading-relaxed text-ink-soft">
+          Pick a starting point or describe yourself. Robin reads each repo&apos;s
+          live activity and tells you what to work on, what to read first, or
+          when to start somewhere else.
+        </p>
+      </header>
 
-        <ProfileForm
+      {/* ── Intake ─────────────────────────────────────────── */}
+      <div className="flex flex-col items-center gap-4">
+        <PersonaChips active={active} busy={busy} onPick={pickPreset} />
+        <Composer
           profile={profile}
           onChange={patchProfile}
-          onSubmit={submitForm}
+          onSubmit={submitComposer}
           busy={busy}
         />
+      </div>
 
-        <footer className="mt-auto pt-6">
-          <div className="font-mono text-[0.58rem] uppercase tracking-[0.18em] text-ink-faint">
-            What Robin reads
-          </div>
-          <p className="mt-1.5 max-w-[32ch] font-mono text-[0.68rem] leading-relaxed text-ink-faint">
-            open issues · last ~100 merged PRs · CONTRIBUTING &amp;
-            developer-notes
-          </p>
-          <div className="mt-3 font-mono text-[0.6rem] text-ink-faint/70">
-            RAG, not fine-tuning.
-          </div>
-        </footer>
-      </aside>
+      {/* ── Results ────────────────────────────────────────── */}
+      <section className="mt-10 flex-1">
+        {busy ? (
+          <ResultsSkeleton />
+        ) : result ? (
+          <Results response={result} />
+        ) : null}
+      </section>
 
-      {/* ── Results column ──────────────────────────────── */}
-      <main className="flex min-h-dvh flex-col px-6 py-8 sm:px-10">
-        <div className="mx-auto w-full max-w-[680px] flex-1">
-          {busy ? (
-            <ResultsSkeleton />
-          ) : result ? (
-            <Results response={result} />
-          ) : (
-            <ResultsEmpty />
-          )}
-        </div>
+      {/* ── Dogfood (always visible) ───────────────────────── */}
+      <div className="mt-10">
+        <DogfoodCallout />
+      </div>
 
-        <div className="mx-auto mt-8 w-full max-w-[680px]">
-          <DogfoodCallout />
-        </div>
-      </main>
-    </div>
+      <footer className="mt-8 text-center font-mono text-[0.62rem] text-ink-faint">
+        RAG, not fine-tuning · open issues · last ~100 merged PRs · CONTRIBUTING
+      </footer>
+    </main>
   );
 }

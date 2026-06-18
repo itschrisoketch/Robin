@@ -40,7 +40,7 @@ function EvidencePanel({
   rec: Recommendation;
   isRedirect: boolean;
 }) {
-  const accent = isRedirect ? "text-honey-deep" : "text-robin";
+  const accent = isRedirect ? "text-honey-deep" : "text-robin-deep";
   return (
     <div className="mt-4 space-y-4 border-t border-hairline-soft pt-4 text-[0.9rem] leading-relaxed">
       <div>
@@ -132,7 +132,7 @@ function RecommendationCard({
         <span
           className={[
             "font-display text-2xl leading-none tabular-nums",
-            isRedirect ? "text-honey-deep" : "text-robin",
+            isRedirect ? "text-honey-deep" : "text-robin-deep",
           ].join(" ")}
         >
           {String(rec.rank).padStart(2, "0")}
@@ -161,7 +161,7 @@ function RecommendationCard({
           className={[
             "mt-1 shrink-0 transition-transform duration-300",
             open ? "rotate-90" : "",
-            isRedirect ? "text-honey-deep" : "text-robin",
+            isRedirect ? "text-honey-deep" : "text-robin-deep",
           ].join(" ")}
         >
           <Arrow size={15} />
@@ -187,7 +187,7 @@ function SourceStrip({ sources }: { sources: string[] }) {
       <ul className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1">
         {sources.map((s) => (
           <li key={s} className="font-mono text-[0.7rem] text-ink-faint">
-            <span className="text-robin/70">·</span> {s}
+            <span className="text-robin-deep/70">·</span> {s}
           </li>
         ))}
       </ul>
@@ -251,7 +251,7 @@ export function Results({ response }: { response: RobinResponse }) {
         <span className="ml-auto flex items-center gap-1.5 font-mono text-[0.66rem] text-ink-faint">
           fit
           <span
-            className={isRedirect ? "text-honey-deep" : "text-robin"}
+            className={isRedirect ? "text-honey-deep" : "text-robin-deep"}
           >
             {Math.round(response.fitScore)}%
           </span>
@@ -301,7 +301,7 @@ export function DogfoodCallout() {
       <div className="flex items-start gap-4">
         <span className="mt-0.5 h-9 w-1 shrink-0 rounded-full bg-robin" aria-hidden="true" />
         <div>
-          <div className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-robin">
+          <div className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-robin-deep">
             We used Robin ourselves
           </div>
           <p className="mt-1.5 max-w-[60ch] text-[0.92rem] leading-relaxed text-ink-soft">
@@ -311,7 +311,7 @@ export function DogfoodCallout() {
           </p>
           <a
             href="#"
-            className="mt-2.5 inline-flex items-center gap-1.5 font-mono text-[0.78rem] text-robin hover:underline"
+            className="mt-2.5 inline-flex items-center gap-1.5 font-mono text-[0.78rem] text-robin-deep hover:underline"
           >
             View the PR on GitHub <Arrow size={13} />
           </a>
