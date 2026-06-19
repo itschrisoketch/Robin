@@ -13,8 +13,7 @@ const bricolage = Bricolage_Grotesque({
 
 export const metadata: Metadata = {
   title: "Robin — a path into Bitcoin open source",
-  description:
-    "A context-aware guide that tells Bitcoin OSS contributors what to work on, what to read first, and when not to contribute yet.",
+  description: "Get to learn how to make your first open source contribution.",
 };
 
 export default function RootLayout({
