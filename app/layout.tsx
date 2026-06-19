@@ -12,8 +12,22 @@ const bricolage = Bricolage_Grotesque({
 });
 
 export const metadata: Metadata = {
+  // Absolute base so the share image resolves for social scrapers.
+  metadataBase: new URL("https://buildwithrobin.vercel.app"),
   title: "Robin — a path into Bitcoin open source",
   description: "Get to learn how to make your first open source contribution.",
+  openGraph: {
+    title: "Robin",
+    description: "Get to learn how to make your first open source contribution.",
+    url: "/",
+    siteName: "Robin",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Robin",
+    description: "Get to learn how to make your first open source contribution.",
+  },
 };
 
 export default function RootLayout({

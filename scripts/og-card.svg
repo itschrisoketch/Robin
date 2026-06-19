@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#fafafa" />
+  <rect width="1200" height="10" fill="#f7931a" />
+
+  <!-- Robin mark (orange tile + bird) -->
+  <g transform="translate(510,104)">
+    <rect width="180" height="180" rx="40" fill="#f7931a" />
+    <g transform="translate(18,27) scale(3.69)">
+      <path d="M7 14 L2 9 L10 16 Z" fill="#1a1206" />
+      <path d="M27 11c-7-2-15 2-17 9-1 4 1 8 6 9 6 1 13-1 16-6 3-5 2-10-5-12Z" fill="#1a1206" />
+      <path d="M16 19c-2 3-2 6 0 8 3 1.6 7 1.2 10-0.6-2.6-3-6.4-5.6-10-7.4Z" fill="#3a2810" />
+      <path d="M27 11l7-1-6 4Z" fill="#1a1206" />
+      <circle cx="26.5" cy="14.5" r="1.4" fill="#f7931a" />
+    </g>
+  </g>
+
+  <text x="600" y="372" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="92" font-weight="700" fill="#1c1c1e" letter-spacing="-2">Robin</text>
+
+  <text x="600" y="446" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="36" fill="#5a5a5e">Get to learn how to make</text>
+  <text x="600" y="494" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="36" fill="#5a5a5e">your first open source contribution.</text>
+
+  <text x="600" y="576" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="20" font-weight="600" fill="#b08a4e" letter-spacing="3">A PATH INTO BITCOIN OPEN SOURCE</text>
+</svg>
