@@ -1,3 +1,4 @@
+<img width="738" height="1600" alt="robin-screenshot" src="https://github.com/user-attachments/assets/34f19e0c-53c0-40bc-8e56-34d6e160b99b" />
 # Robin
 
 **A context-aware AI guide for prospective Bitcoin open-source contributors.**
