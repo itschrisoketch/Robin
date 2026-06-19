@@ -3,7 +3,7 @@
   <rect width="1200" height="10" fill="#f7931a" />
 
   <!-- Robin mark (orange tile + bird) -->
-  <g transform="translate(510,104)">
+  <g transform="translate(510,168)">
     <rect width="180" height="180" rx="40" fill="#f7931a" />
     <g transform="translate(18,27) scale(3.69)">
       <path d="M7 14 L2 9 L10 16 Z" fill="#1a1206" />
@@ -14,10 +14,7 @@
     </g>
   </g>
 
-  <text x="600" y="372" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="92" font-weight="700" fill="#1c1c1e" letter-spacing="-2">Robin</text>
+  <text x="600" y="448" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="96" font-weight="700" fill="#1c1c1e" letter-spacing="-2">Robin</text>
 
-  <text x="600" y="446" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="36" fill="#5a5a5e">Get to learn how to make</text>
-  <text x="600" y="494" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="36" fill="#5a5a5e">your first open source contribution.</text>
-
-  <text x="600" y="576" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="20" font-weight="600" fill="#b08a4e" letter-spacing="3">A PATH INTO BITCOIN OPEN SOURCE</text>
+  <text x="600" y="520" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="22" font-weight="600" fill="#b08a4e" letter-spacing="3">A PATH INTO BITCOIN OPEN SOURCE</text>
 </svg>
