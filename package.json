@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "package:ext": "cd extension && rm -f ../robin-extension.zip && zip -rX ../robin-extension.zip . -x README.md icon.svg '.*' && cd .. && echo 'wrote robin-extension.zip'"
   },
   "dependencies": {
     "geist": "^1.7.2",

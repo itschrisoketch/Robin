@@ -201,6 +201,10 @@ export default function Home() {
 
       <footer className="mt-12 text-center font-mono text-[0.62rem] text-ink-faint">
         Reads live: open issues · last ~100 merged PRs · CONTRIBUTING
+        <span className="mx-1.5">·</span>
+        <a href="/privacy" className="hover:text-ink-soft">
+          Privacy
+        </a>
       </footer>
     </main>
   );
