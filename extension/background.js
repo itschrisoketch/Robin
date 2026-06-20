@@ -2,7 +2,7 @@
 // can't fetch the backend directly (page-origin CORS), so the content script
 // messages here, and the worker fetches (host_permissions grant cross-origin).
 
-const DEFAULT_BACKEND = "https://buildwithrobin.vercel.app";
+const DEFAULT_BACKEND = "https://www.buildwithrobin.xyz";
 
 function getBackend() {
   return new Promise((resolve) => {

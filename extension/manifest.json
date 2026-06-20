@@ -1,16 +1,15 @@
 {
   "manifest_version": 3,
   "name": "Robin \u2014 a path into Bitcoin open source",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Tells prospective Bitcoin OSS contributors what to work on, what to read first, and when not to contribute yet \u2014 right on the GitHub page.",
+  "homepage_url": "https://www.buildwithrobin.xyz",
   "permissions": [
     "storage",
-    "tabs"
+    "activeTab"
   ],
   "host_permissions": [
-    "https://buildwithrobin.vercel.app/*",
-    "http://localhost:3000/*",
-    "http://127.0.0.1:3000/*",
+    "https://www.buildwithrobin.xyz/*",
     "https://github.com/*"
   ],
   "action": {

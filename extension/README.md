@@ -33,11 +33,12 @@ extension (popup + GitHub content script)  ──▶  Next.js /api/recommend  �
 4. Pick a persona → Robin reads the repo's live trajectory and answers inline.
 
 Backend URL is configurable in the extension's **Settings** (options page).
-It now defaults to the production deployment
-(`https://buildwithrobin.vercel.app`), so the extension works out of the box
-without running anything locally. For local development, set it to
-`http://localhost:3000` in Settings and run `pnpm dev` (localhost is already in
-`host_permissions`).
+It defaults to the production deployment (`https://www.buildwithrobin.xyz`), so
+the extension works out of the box without running anything locally. For local
+development against `pnpm dev`, point Settings at `http://localhost:3000` **and**
+temporarily add `"http://localhost:3000/*"` to `host_permissions` in
+`manifest.json` (it's omitted from the published build to keep permissions
+minimal), then reload the extension.
 
 > First answer takes ~25–30s (reasoning model); the panel shows a skeleton while
 > it works.

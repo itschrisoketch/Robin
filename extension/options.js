@@ -1,4 +1,4 @@
-const DEFAULT_BACKEND = "https://buildwithrobin.vercel.app";
+const DEFAULT_BACKEND = "https://www.buildwithrobin.xyz";
 const input = document.getElementById("robin-backend");
 const saved = document.getElementById("robin-saved");
 
